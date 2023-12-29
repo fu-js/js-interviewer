@@ -74,3 +74,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.border-color {
+  @apply border-gray-300 dark:border-gray-700;
+}
+
+.bg-color {
+  @apply bg-gray-200 dark:bg-gray-800;
+}
+
+.text-color {
+  @apply text-gray-400 dark:text-gray-500;
+}
