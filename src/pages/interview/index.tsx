@@ -1,7 +1,8 @@
+import BackButton from "@/components/custom/back-button";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
 export default function Interview() {
@@ -11,12 +12,7 @@ export default function Interview() {
         <div className="absolute right-2 top-2">
           <ModeToggle />
         </div>
-        <Button asChild size="lg">
-          <Link href="/">
-            <ChevronLeftIcon className="h-4 w-4" />
-            Back
-          </Link>
-        </Button>
+        <BackButton href="/" />
         <h1 className="text-4xl text-center p-5 font-bold">Interview table</h1>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
           {[...Array.from({ length: 10 }, (_, i) => i)].map((i) => (

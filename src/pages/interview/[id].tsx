@@ -1,6 +1,6 @@
+import BackButton from "@/components/custom/back-button";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,8 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 const invoices = [
   {
@@ -65,14 +63,9 @@ export default function Interview() {
         <div className="absolute right-2 top-2">
           <ModeToggle />
         </div>
-        <Button asChild size="lg">
-          <Link href="/interview">
-            <ChevronLeftIcon className="h-4 w-4" />
-            Back
-          </Link>
-        </Button>
+        <BackButton href="/interviews"/>
         <h1 className="text-4xl text-center p-5 font-bold">Interview table</h1>
-        <div className="border rounded-lg">
+        <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

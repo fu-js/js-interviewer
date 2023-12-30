@@ -7,6 +7,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <link rel="icon" type="image/x-icon" href="/js.png" />
         <title>JS Coordinator</title>
       </Head>
       <ThemeProvider
