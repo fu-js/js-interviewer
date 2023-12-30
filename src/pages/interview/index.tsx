@@ -16,7 +16,7 @@ export default function Interview() {
         <h1 className="text-4xl text-center p-5 font-bold">Interview table</h1>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
           {[...Array.from({ length: 10 }, (_, i) => i)].map((i) => (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center" key={i}>
               <Button asChild size="lg">
                 <Link href={"/interview/" + (i + 1)}>
                   {"Interview desk " + (i + 1)}

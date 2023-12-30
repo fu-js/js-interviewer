@@ -1,15 +1,19 @@
 import BackButton from "@/components/custom/back-button";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 
 const invoices = [
   {
@@ -63,7 +67,52 @@ export default function Interview() {
         <div className="absolute right-2 top-2">
           <ModeToggle />
         </div>
-        <BackButton href="/interviews"/>
+        <BackButton href="/interview" />
+        <h1 className="text-4xl text-center p-5 font-bold">
+          Ongoing Interviewee
+        </h1>
+        <div className="border flex rounded-lg overflow-hidden p-4 border-dashed border-border">
+          <div className="">
+            <div className="">
+              <img
+                src="https://picsum.photos/900"
+                className="rounded-lg w-96 h-96"
+              />
+              <p className="text-lg font-medium p-2 text-center">
+                Trịnh Phạm Đoan Trang
+              </p>
+              <p className="text-muted-foreground p-1 text-center">
+                Ban Chuyên môn
+              </p>
+            </div>
+          </div>
+          <div className="grow px-4">
+            <div className="">
+              <Label htmlFor="note">Your note</Label>
+              <Textarea placeholder="Enter note" id="note" rows={8} />
+              <p className="text-sm text-muted-foreground">
+                You can drag the bottom right corner to resize the textarea.
+              </p>
+              <RadioGroup defaultValue="Chờ" className="flex py-4">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Đạt" id="r1" />
+                  <Label htmlFor="r1">Đạt</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Chờ" id="r2" />
+                  <Label htmlFor="r2">Chờ</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Loại" id="r3" />
+                  <Label htmlFor="r3">Loại</Label>
+                </div>
+              </RadioGroup>
+              <Button className="block w-full">
+                <span>Submit</span>
+              </Button>
+            </div>
+          </div>
+        </div>
         <h1 className="text-4xl text-center p-5 font-bold">Interview table</h1>
         <div className="border rounded-lg overflow-hidden">
           <Table>
@@ -89,12 +138,6 @@ export default function Interview() {
                 </TableRow>
               ))}
             </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
-              </TableRow>
-            </TableFooter>
           </Table>
         </div>
       </main>
