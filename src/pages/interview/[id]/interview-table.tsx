@@ -9,6 +9,8 @@ import {
 import EditButton from "./edit-button";
 
 export default function ({ data }: any) {
+  if (!data) return null;
+
   return (
     <Table>
       <TableHeader>

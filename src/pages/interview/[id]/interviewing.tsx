@@ -4,6 +4,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ({ onDone, data }: any) {
+  if (!data) return null;
+
   return (
     <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
       <p className="text-lg font-medium p-2 text-center">{data.name}</p>

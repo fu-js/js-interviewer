@@ -14,6 +14,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ({ interviewee }: { interviewee: any }) {
+  if (!interviewee) return null;
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -27,7 +29,7 @@ export default function ({ interviewee }: { interviewee: any }) {
             </DrawerTitle>
             <DrawerDescription>
               <p className="text-muted-foreground">
-                {interviewee.name} - {interviewee.dept}
+                {interviewee?.name} - {interviewee?.dept}
               </p>
             </DrawerDescription>
           </DrawerHeader>
