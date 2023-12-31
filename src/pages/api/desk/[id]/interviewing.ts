@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+
 type ResponseData = {
   data: {
     name: string;
