@@ -6,61 +6,45 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import Interviewing from "./interviewing";
 import InterviewTable from "./interview-table";
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+import { useRouter } from "next/router";
 
 const invoices = [
   {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    id: 1,
+    name: "Trịnh Phạm Đoan Trang",
+    dept: "Ban Chuyên môn",
   },
   {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    id: 2,
+    name: "Nguyễn Thị Thanh Huyền",
+    dept: "Ban Chuyên môn",
   },
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
+    id: 3,
+    name: "Vũ Lê Băng Tâm",
+    dept: "Ban Chuyên môn",
+  }
 ];
 
 export default function Interview() {
+  // interviewing loading
   const [isInterviewing, setIsInterviewing] = useState(true);
-
   const doneInterviewing = () => {
     setIsInterviewing(false);
     setTimeout(() => {
       setIsInterviewing(true);
     }, 1000);
   };
+
+  // interview load
+  const router = useRouter();
+  const deskId = router.query.id as string;
+  const { data: response, isLoading } = useSWR(
+    `/api/desk/${deskId}/interviewing`,
+    fetcher
+  );
 
   return (
     <Layout>
@@ -80,11 +64,11 @@ export default function Interview() {
             </div>
           </div>
         </If>
-        <If condition={isInterviewing}>
-          <Interviewing onDone={doneInterviewing} />
-        </If>
+        {response && isInterviewing && !isLoading && (
+          <Interviewing data={response.data} onDone={doneInterviewing} />
+        )}
         <h1 className="text-4xl text-center p-5 font-bold">Interview table</h1>
-        <div className="border rounded-lg overflow-hidden">
+        <div className="border border-border rounded-lg overflow-hidden">
           <InterviewTable data={invoices} />
         </div>
       </main>

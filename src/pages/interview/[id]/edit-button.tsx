@@ -1,50 +1,75 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 
-export default function () {
+export default function ({ interviewee }: { interviewee: any }) {
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline">Edit</Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button>Edit</Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className="mx-auto w-full max-w-xl">
+          <DrawerHeader>
+            <DrawerTitle>
+              <h3 className="text-xl font-medium">Edit</h3>
+            </DrawerTitle>
+            <DrawerDescription>
+              <p className="text-muted-foreground">
+                {interviewee.name} - {interviewee.dept}
+              </p>
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="grid gap-4 p-4">
+            <Label htmlFor="note">Your note</Label>
+            <Textarea
+              placeholder="Enter note"
+              id="note"
+              className="resize-y"
+              rows={12}
+            />
+            <div className="flex gap-4 items-center py-4">
+              <RadioGroup defaultValue="Chờ" className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Đạt" id="r1" />
+                  <Label htmlFor="r1" className="cursor-pointer">
+                    Đạt
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Chờ" id="r2" />
+                  <Label htmlFor="r2" className="cursor-pointer">
+                    Chờ
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Loại" id="r3" />
+                  <Label htmlFor="r3" className="cursor-pointer">
+                    Loại
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
+          <DrawerFooter>
+            <Button>Submit</Button>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
         </div>
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }
