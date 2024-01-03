@@ -12,6 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 export default function ({
   interviewee,
@@ -21,6 +22,8 @@ export default function ({
   onEdit: any;
 }) {
   if (!interviewee) return null;
+
+  const [data, setData] = useState(interviewee);
 
   return (
     <Drawer>
@@ -34,15 +37,15 @@ export default function ({
               <p className="text-xl font-medium">Edit</p>
             </DrawerTitle>
             <DrawerDescription className="text-muted-foreground">
-              {interviewee?.name} - {interviewee?.dept}
+              {data?.name} - {data?.dept}
             </DrawerDescription>
           </DrawerHeader>
           <div className="grid gap-4 p-4">
             <Label htmlFor="note">Your note</Label>
             <Textarea
               placeholder="Enter note"
-              value={interviewee.note}
-              onChange={(e) => (interviewee.note = e.target.value)}
+              value={data.note}
+              onChange={(e) => setData({ ...data, note: e.target.value })}
               id="note"
               className="resize-y"
               rows={12}
@@ -50,7 +53,7 @@ export default function ({
             <div className="flex gap-4 items-center py-4">
               <RadioGroup
                 defaultValue={interviewee.status}
-                onValueChange={(value) => (interviewee.status = value)}
+                onValueChange={(value) => setData({ ...data, status: value })}
                 className="flex gap-4"
               >
                 <div className="flex items-center space-x-2">
@@ -76,7 +79,7 @@ export default function ({
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button onClick={() => onEdit({ ...interviewee })}>Submit</Button>
+              <Button onClick={() => onEdit({ ...data })}>Submit</Button>
             </DrawerClose>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>

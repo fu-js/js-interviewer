@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+// export const runtime = 'edge' // 'nodejs' (default) | 'edge'
 
 type ResponseData = {
   data: {
+    id: number;
     name: string;
+    dept: string;
   };
 };
 
@@ -25,5 +27,11 @@ export default function handler(
   const { id } = req.query;
   const fakeName = fakeNames[Number(id) - 1];
   mockData.name = fakeName;
-  res.status(200).json({ data: mockData });
+  res.status(200).json({
+    data: {
+      id: 5,
+      name: fakeName,
+      dept: "Ban chuyên môn",
+    },
+  });
 }

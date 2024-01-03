@@ -4,7 +4,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="flex min-h-screen">
       <Sidebar />
-      <div className="grow">{children}</div>
+      <div className="grow ml-52">{children}</div>
     </main>
   );
 }

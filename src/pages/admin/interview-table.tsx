@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import EditButton from "./edit-button";
 
-export default function ({ data, onEdit }: any) {
+export default function ({ data }: any) {
   if (!data) return null;
 
   return (
@@ -28,7 +28,10 @@ export default function ({ data, onEdit }: any) {
             <TableCell className="text-right">{interviewee.dept}</TableCell>
             <TableCell className="text-right">{interviewee.status}</TableCell>
             <TableCell className="text-right">
-              <EditButton interviewee={interviewee} onEdit={onEdit} />
+              <EditButton
+                interviewee={interviewee}
+                onEdit={(interviewee: any) => console.log(interviewee)}
+              />
             </TableCell>
           </TableRow>
         ))}

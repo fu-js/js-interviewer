@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+// export const runtime = 'edge' // 'nodejs' (default) | 'edge'
 
 type ResponseData = {
   data: {
@@ -28,7 +28,5 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  setTimeout(() => {
-    res.status(200).json({ data: mockData });
-  }, 600);
+  res.status(200).json({ data: mockData });
 }

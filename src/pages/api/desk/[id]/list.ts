@@ -1,32 +1,44 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+// export const runtime = 'edge' // 'nodejs' (default) | 'edge'
 
 type ResponseData = {
   data: {
+    id: number;
     name: string;
+    dept: string;
+    note: string;
+    status: string;
   }[];
 };
 
-const mockData = [
+let pastInterviewees = [
   {
+    id: 1,
     name: "Trịnh Phạm Đoan Trang",
+    dept: "Ban Chuyên môn",
+    note: "Đạt",
+    status: "Đạt",
   },
-];
-
-const fakeNames = [
-  "Trịnh Phạm Đoan Trang",
-  "Nguyễn Thị Hồng Hạnh",
-  "Lê Thị Thanh Hằng",
-  "Trần Bảo Ngọc",
+  {
+    id: 2,
+    name: "Nguyễn Thị Thanh Huyền",
+    dept: "Ban Chuyên môn",
+    note: "Chờ",
+    status: "Chờ",
+  },
+  {
+    id: 3,
+    name: "Vũ Lê Băng Tâm",
+    dept: "Ban Văn hóa",
+    note: "Chờ",
+    status: "Chờ",
+  },
 ];
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  const { id } = req.query;
-  const fakeName = fakeNames[Number(id)];
-  mockData[0].name = fakeName;
-  res.status(200).json({ data: mockData });
+  return res.status(200).json({ data: pastInterviewees });
 }

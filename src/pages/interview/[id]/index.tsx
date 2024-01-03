@@ -10,29 +10,41 @@ import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import { useRouter } from "next/router";
 
-const invoices = [
+let pastInterviewees = [
   {
     id: 1,
     name: "Trịnh Phạm Đoan Trang",
     dept: "Ban Chuyên môn",
+    note: "Đạt",
+    status: "Đạt",
   },
   {
     id: 2,
     name: "Nguyễn Thị Thanh Huyền",
     dept: "Ban Chuyên môn",
+    note: "Chờ",
+    status: "Chờ",
   },
   {
     id: 3,
     name: "Vũ Lê Băng Tâm",
-    dept: "Ban Chuyên môn",
-  }
+    dept: "Ban Văn hóa",
+    note: "Chờ",
+    status: "Chờ",
+  },
 ];
 
 export default function Interview() {
   // interviewing loading
   const [isInterviewing, setIsInterviewing] = useState(true);
-  const doneInterviewing = () => {
+  const [data, setData] = useState(pastInterviewees);
+  const doneInterviewing = (data: any) => {
+    // TODO: call api to update interviewee status
     setIsInterviewing(false);
+
+    const newData = [...pastInterviewees, data];
+    setData(newData);
+
     setTimeout(() => {
       setIsInterviewing(true);
     }, 1000);
@@ -43,8 +55,23 @@ export default function Interview() {
   const deskId = router.query.id as string;
   const { data: response, isLoading } = useSWR(
     `/api/desk/${deskId}/interviewing`,
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 1000,
+    }
   );
+
+  // edit history
+  const edit = (data: any) => {
+    // TODO: call api to update interviewee status
+    const newData = pastInterviewees.map((interviewee) => {
+      if (interviewee.id === data.id) {
+        return data;
+      }
+      return interviewee;
+    });
+    setData(newData);
+  };
 
   return (
     <Layout>
@@ -54,7 +81,7 @@ export default function Interview() {
         </div>
         <BackButton href="/interview" />
         <h1 className="text-4xl text-center p-5 font-bold">
-          Ongoing Interviewee
+          Ongoing
         </h1>
         <If condition={!isInterviewing}>
           <div className="border flex rounded-lg p-4 border-dashed border-border justify-center items-center">
@@ -67,9 +94,11 @@ export default function Interview() {
         {response && isInterviewing && !isLoading && (
           <Interviewing data={response.data} onDone={doneInterviewing} />
         )}
-        <h1 className="text-4xl text-center p-5 font-bold">Interview table</h1>
+        <h1 className="mt-20 text-4xl text-center p-5 font-bold">
+          Interview table
+        </h1>
         <div className="border border-border rounded-lg overflow-hidden">
-          <InterviewTable data={invoices} />
+          <InterviewTable data={data} onEdit={edit} />
         </div>
       </main>
     </Layout>
