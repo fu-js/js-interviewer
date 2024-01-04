@@ -34,7 +34,7 @@ export default function ({
               <p className="text-xl font-medium">Edit</p>
             </DrawerTitle>
             <DrawerDescription className="text-muted-foreground">
-              {interviewee?.name} - {interviewee?.dept}
+              {interviewee?.name} - {interviewee?.department.name}
             </DrawerDescription>
           </DrawerHeader>
           <div className="grid gap-4 p-4">
@@ -43,30 +43,30 @@ export default function ({
               placeholder="Enter note"
               value={interviewee.note}
               onChange={(e) => (interviewee.note = e.target.value)}
-              id="note"
+              id="note-edit"
               className="resize-y"
               rows={12}
             />
             <div className="flex gap-4 items-center py-4">
               <RadioGroup
-                defaultValue={interviewee.status}
-                onValueChange={(value) => (interviewee.status = value)}
+                defaultValue={interviewee.decision}
+                onValueChange={(value) => (interviewee.decision = value)}
                 className="flex gap-4"
               >
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Đạt" id="r1" />
+                  <RadioGroupItem value="PASS" id="r1" />
                   <Label htmlFor="r1" className="cursor-pointer">
                     Đạt
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Chờ" id="r2" />
+                  <RadioGroupItem value="CONSIDERING" id="r2" />
                   <Label htmlFor="r2" className="cursor-pointer">
                     Chờ
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Loại" id="r3" />
+                  <RadioGroupItem value="FAIL" id="r3" />
                   <Label htmlFor="r3" className="cursor-pointer">
                     Loại
                   </Label>

@@ -9,40 +9,56 @@ import InterviewTable from "./interview-table";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import { useRouter } from "next/router";
+import Decision from "@/lib/types/decision";
 
-let pastInterviewees = [
+let interviewees = [
   {
     id: 1,
     name: "Trịnh Phạm Đoan Trang",
-    dept: "Ban Chuyên môn",
-    note: "Đạt",
-    status: "Đạt",
+    phoneNumber: "0123456789",
+    department: {
+      id: 1,
+      name: "Ban Chuyen Mon"
+    },
+    decision: Decision.PASS,
   },
   {
     id: 2,
     name: "Nguyễn Thị Thanh Huyền",
-    dept: "Ban Chuyên môn",
-    note: "Chờ",
-    status: "Chờ",
+    phoneNumber: "0123456789",
+    department: {
+      id: 1,
+      name: "Ban Chuyen Mon"
+    },
+    decision: Decision.CONSIDERING,
   },
   {
     id: 3,
     name: "Vũ Lê Băng Tâm",
-    dept: "Ban Văn hóa",
-    note: "Chờ",
-    status: "Chờ",
+    phoneNumber: "0123456789",
+    department: {
+      id: 1,
+      name: "Ban Chuyen Mon"
+    },
+    decision: Decision.FAIL,
   },
 ];
 
 export default function Interview() {
   // interviewing loading
   const [isInterviewing, setIsInterviewing] = useState(true);
-  const [data, setData] = useState(pastInterviewees);
-  const doneInterviewing = (data: any) => {
-    // TODO: call api to update interviewee status
+  const [data, setData] = useState(interviewees);
+  const doneInterviewing = (interviewee: any) => {
+    // TODO: call api to update interviewee decision
     setIsInterviewing(false);
 
-    const newData = [...pastInterviewees, data];
+    const newData = [
+      ...data,
+      {
+        ...interviewee,
+        id: interviewee.length + 1,
+      },
+    ];
     setData(newData);
 
     setTimeout(() => {
@@ -58,15 +74,16 @@ export default function Interview() {
     fetcher,
     {
       refreshInterval: 1000,
-    }
+    },
   );
 
   // edit history
-  const edit = (data: any) => {
-    // TODO: call api to update interviewee status
-    const newData = pastInterviewees.map((interviewee) => {
-      if (interviewee.id === data.id) {
-        return data;
+  const edit = (newInterviewee: any) => {
+    // TODO: call api to update interviewee decision
+    const newData = data.map((interviewee) => {
+      if (interviewee.id === newInterviewee.id) {
+        console.log(newInterviewee);
+        return newInterviewee;
       }
       return interviewee;
     });
@@ -80,9 +97,10 @@ export default function Interview() {
           <ModeToggle />
         </div>
         <BackButton href="/interview" />
-        <h1 className="text-4xl text-center p-5 font-bold">
-          Ongoing
+        <h1 className="text-4xl px-2 py-5 font-bold">
+          {"Bàn phỏng vấn " + deskId}
         </h1>
+        <h2 className="text-4xl text-center p-5 font-bold">Ongoing</h2>
         <If condition={!isInterviewing}>
           <div className="border flex rounded-lg p-4 border-dashed border-border justify-center items-center">
             <div className="flex gap-2 text-muted-foreground py-5">
@@ -94,9 +112,9 @@ export default function Interview() {
         {response && isInterviewing && !isLoading && (
           <Interviewing data={response.data} onDone={doneInterviewing} />
         )}
-        <h1 className="mt-20 text-4xl text-center p-5 font-bold">
+        <h2 className="mt-20 text-4xl text-center p-5 font-bold">
           Interview table
-        </h1>
+        </h2>
         <div className="border border-border rounded-lg overflow-hidden">
           <InterviewTable data={data} onEdit={edit} />
         </div>
