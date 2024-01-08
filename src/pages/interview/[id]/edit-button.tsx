@@ -38,15 +38,10 @@ export default function ({
             </DrawerDescription>
           </DrawerHeader>
           <div className="grid gap-4 p-4">
-            <Label htmlFor="note">Your note</Label>
-            <Textarea
-              placeholder="Enter note"
-              value={interviewee.note}
-              onChange={(e) => (interviewee.note = e.target.value)}
-              id="note-edit"
-              className="resize-y"
-              rows={12}
-            />
+            <Label htmlFor="note">Notes</Label>
+            <div className="w-full p-4 border border-border border-dashed rounded-lg">
+              {interviewee.note || "No note"}
+            </div>
             <div className="flex gap-4 items-center py-4">
               <RadioGroup
                 defaultValue={interviewee.decision}
@@ -76,7 +71,7 @@ export default function ({
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button onClick={() => onEdit({ ...interviewee })}>Submit</Button>
+              <Button onClick={() => onEdit({ ...interviewee })}>Edit</Button>
             </DrawerClose>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>

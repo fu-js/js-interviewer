@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
 export default function ({
@@ -41,15 +40,10 @@ export default function ({
             </DrawerDescription>
           </DrawerHeader>
           <div className="grid gap-4 p-4">
-            <Label htmlFor="note">Your note</Label>
-            <Textarea
-              placeholder="Enter note"
-              value={data.note}
-              onChange={(e) => setData({ ...data, note: e.target.value })}
-              id="note"
-              className="resize-y"
-              rows={12}
-            />
+            <Label htmlFor="note">Notes</Label>
+            <div className="p-4 border border-border border-dashed rounded-lg">
+              {data.note || "No note"}
+            </div>
             <div className="flex gap-4 items-center py-4">
               <RadioGroup
                 defaultValue={interviewee.status}

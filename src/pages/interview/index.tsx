@@ -9,7 +9,10 @@ import Link from "next/link";
 import useSWR from "swr";
 
 export default function Interview() {
-  const { isLoading, data } = useSWR("/api/desks", fetcher);
+  const { isLoading, data } = useSWR(
+    "http://localhost:8080/interview-server/public/1/coordinator/interview-desks?page=1&limit=10",
+    fetcher
+  );
 
   return (
     <Layout>
@@ -30,7 +33,7 @@ export default function Interview() {
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
           {data &&
-            data.data.map((desk: any, index: number) => (
+            data.data.candidates.map((desk: any, index: number) => (
               <InterviewDeskButton key={index} desk={desk} />
             ))}
         </div>

@@ -11,6 +11,53 @@ import fetcher from "@/lib/fetcher";
 import { useRouter } from "next/router";
 import Decision from "@/lib/types/decision";
 
+let metadata = [
+  { title: "Mã số sinh viên:", content: "HE190182" },
+  {
+    title: "Link Facebook:",
+    content: "https://www.facebook.com/viet.buiquoc.284?mibextid=ZbWKwL",
+  },
+  {
+    title: "Chuyên ngành học của bạn là gì?",
+    content: "Công nghệ thông tin",
+  },
+  {
+    title: "Bạn hãy miêu tả bản thân bằng 3 từ:",
+    content: "Thích Nhật Bản",
+  },
+  {
+    title:
+      "Bạn có sở thích hay tài năng đặc biệt nào không? Đừng ngần ngại khoe với chúng mình những thế mạnh hay tài lẻ của bạn nhé, biết đâu đó là những điểm cộng rất lớn đấy!",
+    content:
+      "Mình khá thích Nhật, nếu không vì bác Yên mất giá là mình đi rồi 😥",
+  },
+  {
+    title: "Lý do bạn muốn tham gia vào JS Club là gì?",
+    content: "Học hỏi là chính, kiếm drl là phụ :3",
+  },
+  {
+    title:
+      "Bạn có thể gửi chúng mình 1 tấm ảnh của mình ở bên dưới để chúng mình có thể dễ dàng nhận ra bạn được không?",
+    content:
+      "https://drive.google.com/open?id=132Ulu02ssMrSDCzZv74-OP7ci-Ad9iTl",
+  },
+  { title: "Bạn muốn ứng tuyển vào ban nào", content: "Ban Chuyên môn" },
+  {
+    title:
+      "Tại sao bạn lại lựa chọn trở thành thành viên ban Chuyên môn? Điều gì khiến bạn cảm thấy phù hợp tại vị trí này?",
+    content: "Mình học CNTT và cũng có biết 1 chút tiếng Nhật",
+  },
+  {
+    title: "Bạn muốn đăng ký ban chuyên môn chuyên về mảng gì nhỉ?",
+    content: "Cả 2",
+  },
+  {
+    title:
+      "Cho chúng mình biết nhiều hơn và chi tiết hơn những kinh nghiệm và kỹ năng bạn có nhé",
+    content: "Từng học xong N4 (từ năm lớp 10 😥)",
+  },
+];
+
 let interviewees = [
   {
     id: 1,
@@ -18,8 +65,9 @@ let interviewees = [
     phoneNumber: "0123456789",
     department: {
       id: 1,
-      name: "Ban Chuyen Mon"
+      name: "Ban Chuyen Mon",
     },
+    metadata: metadata,
     decision: Decision.PASS,
   },
   {
@@ -28,8 +76,9 @@ let interviewees = [
     phoneNumber: "0123456789",
     department: {
       id: 1,
-      name: "Ban Chuyen Mon"
+      name: "Ban Chuyen Mon",
     },
+    metadata: metadata,
     decision: Decision.CONSIDERING,
   },
   {
@@ -38,8 +87,9 @@ let interviewees = [
     phoneNumber: "0123456789",
     department: {
       id: 1,
-      name: "Ban Chuyen Mon"
+      name: "Ban Chuyen Mon",
     },
+    metadata: metadata,
     decision: Decision.FAIL,
   },
 ];
@@ -52,19 +102,21 @@ export default function Interview() {
     // TODO: call api to update interviewee decision
     setIsInterviewing(false);
 
-    const newData = [
-      ...data,
-      {
-        ...interviewee,
-        id: interviewee.length + 1,
-      },
-    ];
-    setData(newData);
+    // const newData = [
+    //   ...data,
+    //   {
+    //     ...interviewee,
+    //     id: interviewee.length + 1,
+    //   },
+    // ];
+    // setData(newData);
 
     setTimeout(() => {
       setIsInterviewing(true);
     }, 1000);
   };
+
+  const submitNote = (interviewee: any) => {};
 
   // interview load
   const router = useRouter();
@@ -74,7 +126,7 @@ export default function Interview() {
     fetcher,
     {
       refreshInterval: 1000,
-    },
+    }
   );
 
   // edit history
@@ -110,7 +162,11 @@ export default function Interview() {
           </div>
         </If>
         {response && isInterviewing && !isLoading && (
-          <Interviewing data={response.data} onDone={doneInterviewing} />
+          <Interviewing
+            data={response.data}
+            onDone={doneInterviewing}
+            onNoteSubmit={submitNote}
+          />
         )}
         <h2 className="mt-20 text-4xl text-center p-5 font-bold">
           Interview table
