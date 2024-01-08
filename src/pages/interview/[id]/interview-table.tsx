@@ -17,6 +17,7 @@ export default function ({ data, onEdit }: any) {
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Dept</TableHead>
+          <TableHead>Decision</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className="text-right">Action</TableHead>
         </TableRow>
@@ -24,11 +25,12 @@ export default function ({ data, onEdit }: any) {
       <TableBody>
         {data.map((interviewee: any) => (
           <TableRow key={interviewee.id}>
-            <TableCell className="font-medium">{interviewee.name}</TableCell>
-            <TableCell>
-              {interviewee.department.name}
+            <TableCell className="font-medium">
+              {interviewee.fullName}
             </TableCell>
+            <TableCell>{interviewee.department.name}</TableCell>
             <TableCell>{interviewee.decision}</TableCell>
+            <TableCell>{interviewee.status}</TableCell>
             <TableCell className="text-right">
               <EditButton interviewee={interviewee} onEdit={onEdit} />
             </TableCell>

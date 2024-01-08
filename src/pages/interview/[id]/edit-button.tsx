@@ -34,7 +34,7 @@ export default function ({
               <p className="text-xl font-medium">Edit</p>
             </DrawerTitle>
             <DrawerDescription className="text-muted-foreground">
-              {interviewee?.name} - {interviewee?.department.name}
+              {interviewee?.fullName} - {interviewee?.department.name}
             </DrawerDescription>
           </DrawerHeader>
           <div className="grid gap-4 p-4">
@@ -55,7 +55,7 @@ export default function ({
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="CONSIDERING" id="r2" />
+                  <RadioGroupItem value="NOT_DECIDED" id="r2" />
                   <Label htmlFor="r2" className="cursor-pointer">
                     Chờ
                   </Label>

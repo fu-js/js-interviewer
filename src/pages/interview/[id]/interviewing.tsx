@@ -1,3 +1,4 @@
+import If from "@/components/custom/if";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -7,15 +8,18 @@ import { useState } from "react";
 export default function ({ onDone, onNoteSubmit, data }: any) {
   if (!data) return null;
 
-  const { name, metadata } = data;
+  const { fullName, metadata, department } = data;
   const [status, setStatus] = useState("Chờ");
   const [note, setNote] = useState("");
+  const [isStarted, setIsStarted] = useState(false);
 
   return (
     <div className="space-y-5">
       <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
-        <p className="text-lg font-medium p-2 text-center">{name}</p>
-        <p className="text-muted-foreground p-1 text-center">Ban Chuyên môn</p>
+        <p className="text-lg font-medium p-2 text-center">{fullName}</p>
+        <p className="text-muted-foreground p-1 text-center">
+          {department.name}
+        </p>
         {metadata?.map((item: any) => (
           <div className="py-2">
             <span className="text-muted-foreground">{item.title}</span>
@@ -24,71 +28,85 @@ export default function ({ onDone, onNoteSubmit, data }: any) {
           </div>
         ))}
       </div>
-      <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
-        <div className="">
-          <Label htmlFor="note">Your note</Label>
-          <Textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Enter note"
-            id="note"
-            rows={8}
-          />
-          <p className="text-sm text-muted-foreground pt-1">
-            You can drag the bottom right corner to resize the textarea.
-          </p>
+      <If condition={!isStarted}>
+        <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
           <Button
-            className="mt-4"
+            className=""
             onClick={() => {
-              onNoteSubmit({
-                ...data,
-                note,
-              });
+              setIsStarted(true);
             }}
           >
-            <span>Submit note</span>
+            <span>Start interview</span>
           </Button>
         </div>
-      </div>
+      </If>
+      <If condition={isStarted}>
+        <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
+          <div className="">
+            <Label htmlFor="note">Your note</Label>
+            <Textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Enter note"
+              id="note"
+              rows={8}
+            />
+            <p className="text-sm text-muted-foreground pt-1">
+              You can drag the bottom right corner to resize the textarea.
+            </p>
+            <Button
+              className="mt-4"
+              onClick={() => {
+                onNoteSubmit({
+                  ...data,
+                  note,
+                });
+              }}
+            >
+              <span>Submit note</span>
+            </Button>
+          </div>
+        </div>
 
-      <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
-        <div className="flex gap-4 items-center py-4">
-          <RadioGroup
-            defaultValue={status}
-            onValueChange={(value) => setStatus(value)}
-            className="flex gap-4"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Đạt" id="r1" />
-              <Label htmlFor="r1" className="cursor-pointer">
-                Đạt
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Chờ" id="r2" />
-              <Label htmlFor="r2" className="cursor-pointer">
-                Chờ
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Loại" id="r3" />
-              <Label htmlFor="r3" className="cursor-pointer">
-                Loại
-              </Label>
-            </div>
-          </RadioGroup>
-          <Button
-            onClick={() =>
-              onDone({
-                ...data,
-                status,
-              })
-            }
-          >
-            <span>End interview</span>
-          </Button>
+        <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
+          <div className="flex gap-4 items-center py-4">
+            <RadioGroup
+              defaultValue={status}
+              onValueChange={(value) => setStatus(value)}
+              className="flex gap-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Đạt" id="r1" />
+                <Label htmlFor="r1" className="cursor-pointer">
+                  Đạt
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Chờ" id="r2" />
+                <Label htmlFor="r2" className="cursor-pointer">
+                  Chờ
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Loại" id="r3" />
+                <Label htmlFor="r3" className="cursor-pointer">
+                  Loại
+                </Label>
+              </div>
+            </RadioGroup>
+            <Button
+              onClick={() =>
+                onDone({
+                  ...data,
+                  status,
+                })
+              }
+            >
+              <span>End interview</span>
+            </Button>
+          </div>
         </div>
-      </div>
+      </If>
     </div>
   );
 }

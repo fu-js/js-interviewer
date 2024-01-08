@@ -6,13 +6,25 @@ import { Button } from "@/components/ui/button";
 import fetcher from "@/lib/fetcher";
 import { ChevronRightIcon, ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 export default function Interview() {
-  const { isLoading, data } = useSWR(
-    "http://localhost:8080/interview-server/public/1/coordinator/interview-desks?page=1&limit=10",
+  const { isLoading, data: candidates } = useSWR(
+    `${process.env.BACKEND_URL}/coordinator/interview-desks?page=1&limit=20&departmentId=1,2`,
     fetcher
   );
+
+  const [desks, setDesks] = useState<any[]>([]);
+  useEffect(() => {
+    if (!candidates) return;
+    const desks: any[] = candidates?.data.candidates.map((candidate: any) => ({
+      id: candidate.interviewDesk.id,
+      name: candidate.interviewDesk.name,
+    }));
+    const uniqueDesks = [...new Map(desks.map((item) => [item.id, item])).values()];
+    setDesks(uniqueDesks);
+  }, [candidates]);
 
   return (
     <Layout>
@@ -32,8 +44,8 @@ export default function Interview() {
         </If>
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
-          {data &&
-            data.data.candidates.map((desk: any, index: number) => (
+          {desks &&
+            desks.map((desk: any, index: number) => (
               <InterviewDeskButton key={index} desk={desk} />
             ))}
         </div>
