@@ -1,26 +1,36 @@
+import DecisionGroup from "@/components/custom/decision-group";
 import If from "@/components/custom/if";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import Decision from "@/lib/types/decision";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
-export default function ({ onDone, onNoteSubmit, data }: any) {
-  if (!data) return null;
+export default function ({ onDone, onNoteSubmit, candidate }: any) {
+  if (!candidate) return null;
 
-  const { fullName, metadata, department } = data;
-  const [status, setStatus] = useState("Chờ");
+  const { fullName, metadata, department } = candidate;
+  const [decision, setDecision] = useState(
+    candidate.decision || Decision.NOT_DECIDED
+  );
   const [note, setNote] = useState("");
   const [isStarted, setIsStarted] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
 
+  const submitNote = () => {
+    const isSuccess = onNoteSubmit(candidate, note);
+    if (isSuccess) {
+      setNote("");
+    }
+  };
+
   const endInterview = () => {
     setIsEnding(true);
-    // onDone({
-    //   ...data,
-    //   status,
-    // });
+    onDone({
+      ...candidate,
+      decision,
+    });
     setTimeout(() => {
       setIsEnding(false);
     }, 1000);
@@ -67,15 +77,7 @@ export default function ({ onDone, onNoteSubmit, data }: any) {
             <p className="text-sm text-muted-foreground pt-1">
               You can drag the bottom right corner to resize the textarea.
             </p>
-            <Button
-              className="mt-4"
-              onClick={() => {
-                onNoteSubmit({
-                  ...data,
-                  note,
-                });
-              }}
-            >
+            <Button className="mt-4" onClick={submitNote}>
               <span>Submit note</span>
             </Button>
           </div>
@@ -83,34 +85,12 @@ export default function ({ onDone, onNoteSubmit, data }: any) {
 
         <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
           <div className="flex gap-4 items-center py-4">
-            <RadioGroup
-              defaultValue={status}
-              onValueChange={(value) => setStatus(value)}
-              className="flex gap-4"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Đạt" id="r1" />
-                <Label htmlFor="r1" className="cursor-pointer">
-                  Đạt
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Chờ" id="r2" />
-                <Label htmlFor="r2" className="cursor-pointer">
-                  Chờ
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Loại" id="r3" />
-                <Label htmlFor="r3" className="cursor-pointer">
-                  Loại
-                </Label>
-              </div>
-            </RadioGroup>
+            <DecisionGroup
+              defaultValue={decision}
+              onValueChange={(value) => setDecision(value)}
+            />
             <Button onClick={endInterview}>
-              {isEnding && (
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {isEnding && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
               <span>End interview</span>
             </Button>
           </div>

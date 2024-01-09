@@ -3,6 +3,7 @@ import If from "@/components/custom/if";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
 import { useToast } from "@/components/ui/use-toast";
+import requestBackend from "@/lib/requestBackend";
 import Status from "@/lib/types/status";
 import useFetch from "@/lib/useFetch";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -15,50 +16,92 @@ export default function Interview() {
   const { toast } = useToast();
   const router = useRouter();
   const deskId = router.query.id as string;
+  const backendUrl = process.env.BACKEND_URL;
 
   // interviewing loading
   const {
     data: candidates,
     isLoading: isLoadingCandidates,
-    mutate,
-  } = useFetch(`${process.env.BACKEND_URL}/interview-desk/${deskId || 1}`, {
+    mutate: refetchCandidates,
+  } = useFetch(`${backendUrl}/interview-desk/${deskId || 1}`, {
     page: 0,
     limit: 100,
   });
 
   const [inverviewingCandidate, setInterviewingCandidate] = useState<any>(null);
-  useEffect(() => {
+  const filterInterviewingCandidate = () => {
     if (!candidates) return;
     const interviewingCandidate = candidates?.data.candidates.find(
       (candidate: any) => candidate.status === Status.CHECKED_IN
     );
     setInterviewingCandidate(interviewingCandidate);
-  }, [candidates]);
+  };
+  useEffect(filterInterviewingCandidate, [candidates]);
 
   const doneInterviewing = async (interviewee: any) => {
-    const res = await fetch(
-      `${process.env.BACKEND_URL}/interview-desk/${deskId}/complete?candidateId=${interviewee.id}`,
+    const res = await requestBackend(
+      `/interview-desk/${deskId}/complete`,
+      { candidateId: interviewee.id },
+      { method: "PUT" }
+    );
+    const decideRes = await requestBackend(
+      `/interview-desk/${deskId}/decide`,
       {
-        method: "PUT",
-      }
+        candidateId: interviewee.id,
+        decision: interviewee.decision,
+      },
+      { method: "PUT" }
     );
     const status = res.status;
-    if (status === 200) {
-      mutate();
+    const decideStatus = decideRes.status;
+    if (status === 200 && decideStatus === 200) {
+      refetchCandidates();
       setInterviewingCandidate(null);
-      toast({
-        title: "Success",
-      });
+      toast({ title: "Success" });
     } else {
-      toast({
-        title: "Failed ",
-      });
+      toast({ title: "Failed " });
     }
   };
 
-  const submitNote = (interviewee: any) => {};
+  const submitNote = async (candidate: any, note: string) => {
+    const noteResponse = await requestBackend(
+      `/interview-desk/${deskId}/note`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ candidateId: candidate.id, note: note }),
+      }
+    );
+    const noteStatus = noteResponse.status;
+    if (noteStatus === 200) {
+      toast({ title: "Success" });
+    } else {
+      toast({ title: "Failed " });
+    }
+  };
 
-  const edit = (newInterviewee: any) => {};
+  const edit = async (newCandidateData: any): Promise<boolean> => {
+    const decideResponse = await requestBackend(
+      `/interview-desk/${deskId}/decide`,
+      {
+        candidateId: newCandidateData.id,
+        decision: newCandidateData.decision,
+      },
+      { method: "PUT" }
+    );
+    const decideStatus = decideResponse.status;
+    if (decideStatus === 200) {
+      refetchCandidates();
+      toast({ title: "Success" });
+      return true;
+    } else {
+      toast({ title: "Failed " });
+      return false;
+    }
+  };
 
   return (
     <Layout>
@@ -80,7 +123,7 @@ export default function Interview() {
           </div>
         </If>
         <Interviewing
-          data={inverviewingCandidate}
+          candidate={inverviewingCandidate}
           onDone={doneInterviewing}
           onNoteSubmit={submitNote}
         />

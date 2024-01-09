@@ -23,16 +23,16 @@ export default function ({ data, onEdit }: any) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((interviewee: any) => (
-          <TableRow key={interviewee.id}>
+        {data.map((candidate: any) => (
+          <TableRow key={candidate.id}>
             <TableCell className="font-medium">
-              {interviewee.fullName}
+              {candidate.fullName}
             </TableCell>
-            <TableCell>{interviewee.department.name}</TableCell>
-            <TableCell>{interviewee.decision}</TableCell>
-            <TableCell>{interviewee.status}</TableCell>
+            <TableCell>{candidate.department.name}</TableCell>
+            <TableCell>{candidate.decision}</TableCell>
+            <TableCell>{candidate.status}</TableCell>
             <TableCell className="text-right">
-              <EditButton interviewee={interviewee} onEdit={onEdit} />
+              <EditButton candidate={candidate} onEdit={onEdit} />
             </TableCell>
           </TableRow>
         ))}

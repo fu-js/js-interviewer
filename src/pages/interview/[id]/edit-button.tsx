@@ -1,84 +1,56 @@
+import DecisionGroup from "@/components/custom/decision-group";
 import { Button } from "@/components/ui/button";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function ({
-  interviewee,
+  candidate,
   onEdit,
 }: {
-  interviewee: any;
+  candidate: any;
   onEdit: any;
 }) {
-  if (!interviewee) return null;
+  if (!candidate) return null;
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button variant="secondary">Edit</Button>
-      </DrawerTrigger>
-      <DrawerContent>
+      </DialogTrigger>
+      <DialogContent>
         <div className="mx-auto w-full max-w-xl">
-          <DrawerHeader>
-            <DrawerTitle>
+          <DialogHeader>
+            <DialogTitle>
               <p className="text-xl font-medium">Edit</p>
-            </DrawerTitle>
-            <DrawerDescription className="text-muted-foreground">
-              {interviewee?.fullName} - {interviewee?.department.name}
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="grid gap-4 p-4">
-            <Label htmlFor="note">Notes</Label>
-            <div className="w-full p-4 border border-border border-dashed rounded-lg">
-              {interviewee.note || "No note"}
-            </div>
-            <div className="flex gap-4 items-center py-4">
-              <RadioGroup
-                defaultValue={interviewee.decision}
-                onValueChange={(value) => (interviewee.decision = value)}
-                className="flex gap-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="PASS" id="r1" />
-                  <Label htmlFor="r1" className="cursor-pointer">
-                    Đạt
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="NOT_DECIDED" id="r2" />
-                  <Label htmlFor="r2" className="cursor-pointer">
-                    Chờ
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="FAIL" id="r3" />
-                  <Label htmlFor="r3" className="cursor-pointer">
-                    Loại
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {candidate?.fullName} - {candidate?.department.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-6">
+            <DecisionGroup
+              defaultValue={candidate.decision}
+              onValueChange={(value) => (candidate.decision = value)}
+            />
           </div>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button onClick={() => onEdit({ ...interviewee })}>Edit</Button>
-            </DrawerClose>
-            <DrawerClose asChild>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => onEdit({ ...candidate })}>Edit</Button>
+            </DialogClose>
+            <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
+            </DialogClose>
+          </DialogFooter>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 }
