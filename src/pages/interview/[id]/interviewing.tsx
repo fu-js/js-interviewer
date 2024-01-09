@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 export default function ({ onDone, onNoteSubmit, data }: any) {
@@ -12,6 +13,18 @@ export default function ({ onDone, onNoteSubmit, data }: any) {
   const [status, setStatus] = useState("Chờ");
   const [note, setNote] = useState("");
   const [isStarted, setIsStarted] = useState(false);
+  const [isEnding, setIsEnding] = useState(false);
+
+  const endInterview = () => {
+    setIsEnding(true);
+    // onDone({
+    //   ...data,
+    //   status,
+    // });
+    setTimeout(() => {
+      setIsEnding(false);
+    }, 1000);
+  };
 
   return (
     <div className="space-y-5">
@@ -94,14 +107,10 @@ export default function ({ onDone, onNoteSubmit, data }: any) {
                 </Label>
               </div>
             </RadioGroup>
-            <Button
-              onClick={() =>
-                onDone({
-                  ...data,
-                  status,
-                })
-              }
-            >
+            <Button onClick={endInterview}>
+              {isEnding && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
               <span>End interview</span>
             </Button>
           </div>

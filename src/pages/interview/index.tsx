@@ -11,7 +11,7 @@ import useSWR from "swr";
 
 export default function Interview() {
   const { isLoading, data: candidates } = useSWR(
-    `${process.env.BACKEND_URL}/coordinator/interview-desks?page=1&limit=20&departmentId=1,2`,
+    `${process.env.BACKEND_URL}/coordinator/interview-desks?page=1&limit=10&departmentId=1,2`,
     fetcher
   );
 

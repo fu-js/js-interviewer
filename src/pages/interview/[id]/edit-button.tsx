@@ -25,7 +25,7 @@ export default function ({
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button>Edit</Button>
+        <Button variant="secondary">Edit</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-xl">

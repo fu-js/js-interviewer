@@ -8,7 +8,6 @@ import useFetch from "@/lib/useFetch";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSWRConfig } from "swr";
 import InterviewTable from "./interview-table";
 import Interviewing from "./interviewing";
 
@@ -23,8 +22,8 @@ export default function Interview() {
     isLoading: isLoadingCandidates,
     mutate,
   } = useFetch(`${process.env.BACKEND_URL}/interview-desk/${deskId || 1}`, {
-    page: 1,
-    limit: 10,
+    page: 0,
+    limit: 100,
   });
 
   const [inverviewingCandidate, setInterviewingCandidate] = useState<any>(null);
