@@ -3,26 +3,31 @@ import If from "@/components/custom/if";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
 import { Button } from "@/components/ui/button";
-import fetcher from "@/lib/fetcher";
+import useFetch from "@/lib/useFetch";
 import { ChevronRightIcon, ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 
 export default function Interview() {
-  const { isLoading, data: candidates } = useSWR(
-    `${process.env.BACKEND_URL}/coordinator/interview-desks?page=1&limit=10&departmentId=1,2`,
-    fetcher
+  const { isLoading, data: candidates } = useFetch(
+    `${process.env.BACKEND_URL}/coordinator/interview-desks`,
+    {
+      page: 0,
+      limit: 100,
+      departmentId: [1, 2, 3, 4, 5],
+    }
   );
 
   const [desks, setDesks] = useState<any[]>([]);
   useEffect(() => {
     if (!candidates) return;
-    const desks: any[] = candidates?.data.candidates.map((candidate: any) => ({
+    const desks: any[] = candidates?.data.candidates?.map((candidate: any) => ({
       id: candidate.interviewDesk.id,
       name: candidate.interviewDesk.name,
     }));
-    const uniqueDesks = [...new Map(desks.map((item) => [item.id, item])).values()];
+    const uniqueDesks = [
+      ...new Map(desks.map((item) => [item.id, item])).values(),
+    ];
     setDesks(uniqueDesks);
   }, [candidates]);
 
