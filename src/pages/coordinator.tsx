@@ -12,21 +12,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PlusIcon, PersonIcon } from "@radix-ui/react-icons";
+import useFetch from "@/lib/useFetch";
 
-let checkedInCandidates = [{
-  "id": 41,
-  "fullName": "Nguyễn Đức Thắng",
-  "department": {
-    "id": 1,
-    "name": "Ban Văn hóa"
-  },
-  "phoneNumber": "945228637",
-  "interviewSlot": {
-    "id": 1,
-    "order": 0,
-    "slotTime": "7h00-9h00"
-  }
-}];
+// let checkedInCandidates = [{
+//   "id": 41,
+//   "fullName": "Nguyễn Đức Thắng",
+//   "department": {
+//     "id": 1,
+//     "name": "Ban Văn hóa"
+//   },
+//   "phoneNumber": "945228637",
+//   "interviewSlot": {
+//     "id": 1,
+//     "order": 0,
+//     "slotTime": "7h00-9h00"
+//   }
+// }];
 
 const interviewDesk = [
   {
@@ -50,7 +51,18 @@ const interviewDesk = [
 ]
 
 export default function Coordinator() {
-  // duplicate data for testing 10 rows
+  const {
+    data: checkedInCandidates,
+    isLoading: isLoadingCheckedInCandidates,
+    mutate: reloadCheckedInCandidates,
+  } = useFetch(`/coordinator/checked-in`, {
+    page: 0,
+    limit: 100,
+    departmentId: [1, 2, 3, 4, 5],
+  });
+
+  console.log(checkedInCandidates);
+
   return (
     <Layout>
       <main className="p-5">
@@ -77,7 +89,7 @@ export default function Coordinator() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {checkedInCandidates.map((candidate) => (
+                {checkedInCandidates && checkedInCandidates.data.candidates.map((candidate: any) => (
                   <TableRow key={candidate.id}>
                     <TableCell>{candidate.id}</TableCell>
                     <TableCell>{candidate.fullName}</TableCell>
@@ -118,7 +130,7 @@ export default function Coordinator() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {interviewDesk.map((desk) => (
+                {interviewDesk.map((desk: any) => (
                   <TableRow key={desk.id}>
                     <TableCell>{desk.id}</TableCell>
                     <TableCell>{desk.name}</TableCell>
