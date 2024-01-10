@@ -1,61 +1,87 @@
 import DecisionGroup from "@/components/custom/decision-group";
 import { Button } from "@/components/ui/button";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
+import requestBackend from "@/lib/requestBackend";
 import { useState } from "react";
 
 export default function ({ interviewee: candidateData }: { interviewee: any }) {
   if (!candidateData) return null;
 
   const [candidate, setCandidate] = useState(candidateData);
+  const { toast } = useToast();
 
-  function edit(candidate: any): void {
-    
-  }
+  const edit = async (candidate: any) => {
+    const editRes = await requestBackend(
+      `/analysis/decide`,
+      { candidateId: candidate.id, decision: candidate.decision },
+      { method: "PUT" }
+    );
+    const status = editRes.status;
+    if (status === 200) {
+      toast({
+        title: "Edit success",
+        description: "Candidate has been edited",
+      });
+    } else {
+      toast({
+        title: "Edit failed",
+        description: "Candidate has not been edited",
+      });
+    }
+  };
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button variant="secondary">Edit</Button>
-      </DrawerTrigger>
-      <DrawerContent>
+      </DialogTrigger>
+      <DialogContent>
         <div className="mx-auto w-full max-w-xl">
-          <DrawerHeader>
-            <DrawerTitle>
+          <DialogHeader>
+            <DialogTitle>
               <p className="text-xl font-medium">Edit</p>
-            </DrawerTitle>
-            <DrawerDescription className="text-muted-foreground">
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
               {candidate?.fullName} - {candidate?.department.name}
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="grid gap-4 p-4">
-            <div className="flex gap-4 items-center py-4">
-              <DecisionGroup
-                defaultValue={candidateData.decision}
-                onValueChange={(value) =>
-                  setCandidate({ ...candidate, decision: value })
-                }
-              />
-            </div>
+            </DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="h-96 py-4">
+            {JSON.parse(candidate.metadata).map((item: any, index: number) => (
+              <div className="py-1" key={index}>
+                <p className="text-muted-foreground">{"Q: " + item.title}</p>
+                <p>{"A: " + item.content}</p>
+              </div>
+            ))}
+          </ScrollArea>
+          <div className="grid gap-4 py-4">
+            <DecisionGroup
+              defaultValue={candidateData.decision}
+              onValueChange={(decision) =>
+                setCandidate({ ...candidate, decision })
+              }
+            />
           </div>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button onClick={() => edit({ ...candidate })}>Submit</Button>
-            </DrawerClose>
-            <DrawerClose asChild>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => edit(candidate)}>Edit</Button>
+            </DialogClose>
+            <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
+            </DialogClose>
+          </DialogFooter>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 }

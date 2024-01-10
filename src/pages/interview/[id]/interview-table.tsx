@@ -25,12 +25,10 @@ export default function ({ data, onEdit }: any) {
       <TableBody>
         {data.map((candidate: any) => (
           <TableRow key={candidate.id}>
-            <TableCell className="font-medium">
-              {candidate.fullName}
-            </TableCell>
+            <TableCell className="font-medium">{candidate.fullName}</TableCell>
             <TableCell>{candidate.department.name}</TableCell>
             <TableCell>{candidate.decision}</TableCell>
-            <TableCell>{candidate.status}</TableCell>
+            <TableCell>{candidate.candidateStatus}</TableCell>
             <TableCell className="text-right">
               <EditButton candidate={candidate} onEdit={onEdit} />
             </TableCell>

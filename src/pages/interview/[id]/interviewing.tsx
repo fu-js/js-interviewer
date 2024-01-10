@@ -1,10 +1,14 @@
 import DecisionGroup from "@/components/custom/decision-group";
 import If from "@/components/custom/if";
+import LoadButton from "@/components/custom/load-button";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import requestBackend from "@/lib/requestBackend";
 import Decision from "@/lib/types/decision";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import Status from "@/lib/types/status";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function ({ onDone, onNoteSubmit, candidate }: any) {
@@ -15,8 +19,12 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
     candidate.decision || Decision.NOT_DECIDED
   );
   const [note, setNote] = useState("");
-  const [isStarted, setIsStarted] = useState(false);
-  const [isEnding, setIsEnding] = useState(false);
+  const [isStarted, setIsStarted] = useState(
+    candidate.status === Status.INTERVIEWING
+  );
+  const { toast } = useToast();
+  const router = useRouter();
+  const interviewDeskId = router.query.id as string;
 
   const submitNote = () => {
     const isSuccess = onNoteSubmit(candidate, note);
@@ -25,15 +33,27 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
     }
   };
 
-  const endInterview = () => {
-    setIsEnding(true);
-    onDone({
+  const endInterview = async () => {
+    await onDone({
       ...candidate,
       decision,
     });
-    setTimeout(() => {
-      setIsEnding(false);
-    }, 1000);
+  };
+
+  const startInterview = async () => {
+    const postStartResponse = await requestBackend(
+      `/interview-desk/${interviewDeskId}/start`,
+      {
+        candidateId: candidate.id,
+      },
+      { method: "PUT" }
+    );
+    const status = postStartResponse.status;
+    if (status === 200) {
+      setIsStarted(true);
+    } else {
+      toast({ title: "Failed to start interview" });
+    }
   };
 
   return (
@@ -53,14 +73,9 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
       </div>
       <If condition={!isStarted}>
         <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
-          <Button
-            className=""
-            onClick={() => {
-              setIsStarted(true);
-            }}
-          >
+          <LoadButton className="" onClick={startInterview}>
             <span>Start interview</span>
-          </Button>
+          </LoadButton>
         </div>
       </If>
       <If condition={isStarted}>
@@ -89,10 +104,9 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
               defaultValue={decision}
               onValueChange={(value) => setDecision(value)}
             />
-            <Button onClick={endInterview}>
-              {isEnding && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            <LoadButton onClick={endInterview}>
               <span>End interview</span>
-            </Button>
+            </LoadButton>
           </div>
         </div>
       </If>
