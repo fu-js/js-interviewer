@@ -14,5 +14,5 @@ export default async function requestBackend(
     const searchParams = new URLSearchParams(params);
     urlObj.search = searchParams.toString();
   }
-  return fetch(urlObj, config).then((res) => res.json());
+  return fetch(urlObj, config);
 }

@@ -29,11 +29,16 @@ export default function Interview() {
   });
 
   const [inverviewingCandidate, setInterviewingCandidate] = useState<any>(null);
+  const isInterviewing = (candidate: any) => {
+    return (
+      candidate.candidateStatus === Status.CHECKED_IN ||
+      candidate.candidateStatus === Status.INTERVIEWING
+    );
+  };
   const filterInterviewingCandidate = () => {
     if (!candidates) return;
-    const interviewingCandidate = candidates?.data.candidates.find(
-      (candidate: any) => candidate.status === Status.CHECKED_IN
-    );
+    const interviewingCandidate =
+      candidates?.data.candidates.find(isInterviewing);
     setInterviewingCandidate(interviewingCandidate);
   };
   useEffect(filterInterviewingCandidate, [candidates]);
