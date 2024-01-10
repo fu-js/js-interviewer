@@ -11,10 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
+import { PlusIcon, PersonIcon } from "@radix-ui/react-icons";
 
-const checkedInCandidates = [{
+let checkedInCandidates = [{
   "id": 41,
   "fullName": "Nguyễn Đức Thắng",
   "department": {
@@ -29,7 +28,29 @@ const checkedInCandidates = [{
   }
 }];
 
+const interviewDesk = [
+  {
+    "id": 1,
+    "name": "Ban văn hoá 1",
+    "department": "Văn hóa",
+    "status": "Available"
+  },
+  {
+    "id": 2,
+    "name": "Ban văn hóa 2",
+    "department": "Văn hóa",
+    "status": "Interviewing"
+  },
+  {
+    "id": 3,
+    "name": "Ban chuyên môn 1",
+    "department": "Chuyên môn",
+    "status": "Assigned"
+  },
+]
+
 export default function Coordinator() {
+  // duplicate data for testing 10 rows
   return (
     <Layout>
       <main className="p-5">
@@ -42,6 +63,9 @@ export default function Coordinator() {
         </h1>
         <div className="lg:flex gap-4">
           <div className="border rounded-lg grow">
+            <h3 className="text-center text-2xl font-bold p-5">
+              Checked-in Candidates
+            </h3>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -61,27 +85,49 @@ export default function Coordinator() {
                     <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
                     <TableCell>
                       <Button className="mx-2">
-                          {/* <ChevronLeftIcon /> */}
+                          <PlusIcon />
                           Assign
                       </Button>
                       <Button className="mx-2">
-                          {/* <ChevronLeftIcon /> */}
+                          <PersonIcon />
                           View Profile
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
-              <TableFooter>
+              {/* <TableFooter>
                 <TableRow>
                   <TableCell colSpan={4}>Total Waiting</TableCell>
                   <TableCell className="text-right">{checkedInCandidates.length}</TableCell>
                 </TableRow>
-              </TableFooter>
+              </TableFooter> */}
             </Table>
           </div>
-          <div className="grow">
-            <div className="border border-dashed h-full rounded-lg"></div>
+          <div className="border rounded-lg grow">
+            <h3 className="text-center text-2xl font-bold p-5">
+              Interview Desks
+            </h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">ID</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {interviewDesk.map((desk) => (
+                  <TableRow key={desk.id}>
+                    <TableCell>{desk.id}</TableCell>
+                    <TableCell>{desk.name}</TableCell>
+                    <TableCell>{desk.department}</TableCell>
+                    <TableCell>{desk.status}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </main>
