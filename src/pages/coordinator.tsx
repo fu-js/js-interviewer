@@ -14,10 +14,18 @@ import {
 } from "@/components/ui/table";
 import { PlusIcon, PersonIcon } from "@radix-ui/react-icons";
 import useFetch from "@/lib/useFetch";
-import { Dialog } from '@headlessui/react';
+import { Dialog } from "@headlessui/react";
 import requestBackend from "@/lib/requestBackend";
 import { useToast } from "@/components/ui/use-toast";
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // let checkedInCandidates = [{
 //   "id": 41,
@@ -36,35 +44,32 @@ import { useToast } from "@/components/ui/use-toast";
 
 const interviewDesk = [
   {
-    "id": 1,
-    "name": "Ban văn hoá 1",
-    "department": "Văn hóa",
-    "status": "Available"
+    id: 1,
+    name: "Ban văn hoá 1",
+    department: "Văn hóa",
+    status: "Available",
   },
   {
-    "id": 2,
-    "name": "Ban văn hóa 2",
-    "department": "Văn hóa",
-    "status": "Interviewing"
+    id: 2,
+    name: "Ban văn hóa 2",
+    department: "Văn hóa",
+    status: "Interviewing",
   },
   {
-    "id": 3,
-    "name": "Ban chuyên môn 1",
-    "department": "Chuyên môn",
-    "status": "Assigned"
+    id: 3,
+    name: "Ban chuyên môn 1",
+    department: "Chuyên môn",
+    status: "Assigned",
   },
-]
+];
 
 export default function Coordinator() {
-  const {
-    data: checkedInCandidates,
-    isLoading: isLoadingCheckedInCandidates,
-    mutate: reloadCheckedInCandidates,
-  } = useFetch(`/coordinator/checked-in`, {
-    page: 0,
-    limit: 100,
-    departmentId: [1, 2, 3, 4, 5],
-  });
+  const { data: checkedInCandidates, mutate: reloadCheckedInCandidates } =
+    useFetch(`/coordinator/checked-in`, {
+      page: 0,
+      limit: 100,
+      departmentId: [1, 2, 3, 4, 5],
+    });
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState<any>({});
@@ -77,7 +82,9 @@ export default function Coordinator() {
     setSelectedCandidate(candidate);
 
     const selectedDepartment = candidate.department.name;
-    const filteredDesk = interviewDesk.filter((desk: any) => selectedDepartment.toLowerCase().includes(desk.department.toLowerCase()));
+    const filteredDesk = interviewDesk.filter((desk: any) =>
+      selectedDepartment.toLowerCase().includes(desk.department.toLowerCase())
+    );
     setSelectedDesk(filteredDesk);
   };
 
@@ -88,13 +95,17 @@ export default function Coordinator() {
 
     // get selected desk
     const selectedDeskId = event.target.elements[0].value;
-    console.log("Selected Desk: ", selectedDeskId)
+    console.log("Selected Desk: ", selectedDeskId);
 
     // fetch to add candidate to desk
     // PUT /interview-server/public/v1/coordinator/send-to-interview-desk
     const assign = async (candidate: any) => {
       const checkinRes = await requestBackend(
-        `/coordinator/send-to-interview-desk/?candidateIds=${candidate.id}&interviewDeskId=${selectedDeskId}`,
+        `/coordinator/send-to-interview-desk`,
+        {
+          candidateId: candidate.id,
+          interviewDeskId: selectedDeskId,
+        },
         { method: "PUT" }
       );
       const status = checkinRes.status;
@@ -105,7 +116,6 @@ export default function Coordinator() {
         toast({ title: "Assign failed" });
       }
     };
-
 
     // assign selected desk to selected candidate
     assign(selectedCandidate);
@@ -125,15 +135,14 @@ export default function Coordinator() {
         <h1 className="text-4xl text-center p-5 font-bold">
           Coordinator table
         </h1>
-        <div className="lg:flex gap-4">
+        <div className="lg:flex items-start gap-4">
           <div className="border rounded-lg grow">
-            <h3 className="text-center text-2xl font-bold p-5">
+            <h3 className="text-center text-2xl font-bold p-3">
               Checked-in Candidates
             </h3>
             <Table>
-              <TableHeader>
+              <TableHeader className="border-t">
                 <TableRow>
-                  <TableHead className="w-[100px]">ID</TableHead>
                   <TableHead>Full Name</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Slot Time</TableHead>
@@ -141,41 +150,48 @@ export default function Coordinator() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {checkedInCandidates && checkedInCandidates.data.candidates.map((candidate: any) => (
-                  <TableRow key={candidate.id}>
-                    <TableCell>{candidate.id}</TableCell>
-                    <TableCell>{candidate.fullName}</TableCell>
-                    <TableCell>{candidate.department.name}</TableCell>
-                    <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
-                    <TableCell>
-                      <Button className="mx-2" onClick={() => togglePopup(candidate)}>
-                          <PlusIcon />
-                          Assign
-                      </Button>
-                      <Button className="mx-2">
-                          <PersonIcon />
-                          View Profile
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {checkedInCandidates &&
+                  checkedInCandidates.data.candidates.map((candidate: any) => (
+                    <TableRow key={candidate.id}>
+                      <TableCell>{candidate.fullName}</TableCell>
+                      <TableCell>{candidate.department.name}</TableCell>
+                      <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-2">
+                          <Button
+                            className="mx-2"
+                            variant="outline"
+                            onClick={() => togglePopup(candidate)}
+                          >
+                            <PlusIcon className="mr-2" />
+                            Assign
+                          </Button>
+                          {/* <Button variant="outline" className="mx-2">
+                            <PersonIcon className="mr-2" />
+                            View Profile
+                          </Button> */}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
-              {/* <TableFooter>
+              <TableFooter>
                 <TableRow>
-                  <TableCell colSpan={4}>Total Waiting</TableCell>
-                  <TableCell className="text-right">{checkedInCandidates.length}</TableCell>
+                  <TableCell colSpan={3}>Total Waiting</TableCell>
+                  <TableCell className="text-right">
+                    {checkedInCandidates?.data.candidates.length || "---"}
+                  </TableCell>
                 </TableRow>
-              </TableFooter> */}
+              </TableFooter>
             </Table>
           </div>
-          <div className="border rounded-lg grow">
-            <h3 className="text-center text-2xl font-bold p-5">
+          <div className="border rounded-lg">
+            <h3 className="text-center text-2xl font-bold p-3">
               Interview Desks
             </h3>
             <Table>
-              <TableHeader>
+              <TableHeader className="border-t">
                 <TableRow>
-                  <TableHead className="w-[100px]">ID</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Status</TableHead>
@@ -184,7 +200,6 @@ export default function Coordinator() {
               <TableBody>
                 {interviewDesk.map((desk: any) => (
                   <TableRow key={desk.id}>
-                    <TableCell>{desk.id}</TableCell>
                     <TableCell>{desk.name}</TableCell>
                     <TableCell>{desk.department}</TableCell>
                     <TableCell>{desk.status}</TableCell>
@@ -196,25 +211,33 @@ export default function Coordinator() {
         </div>
 
         {isPopupOpen && (
-          <Dialog open={isPopupOpen} onClose={() => setIsPopupOpen(false)} className={`fixed inset-0 z-10 overflow-y-auto`}>
+          <Dialog
+            open={isPopupOpen}
+            onClose={() => setIsPopupOpen(false)}
+            className={`fixed flex justify-center items-center inset-0 z-10 overflow-y-auto`}
+          >
             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-
-            <div className={`relative bg-white dark:bg-gray-800 rounded max-w-sm mx-auto mt-10 p-8`}>
-              <Dialog.Title className="text-gray-900 dark:text-gray-100">Assign Candidate</Dialog.Title>
+            <div
+              className={`relative bg-background border rounded-lg max-w-sm p-8`}
+            >
+              <Dialog.Title className="">Assign Candidate</Dialog.Title>
               <form onSubmit={handleSubmit}>
-                <select className="border p-2 rounded w-full text-gray-900 dark:text-gray-100 dark:border-gray-700 dark:bg-gray-700">
-                  {/* Filter desk with same department.id with selectedCandidate */}
-                  
-                  {selectedDesk && selectedDesk.map((desk: any) => (
-                    <option key={desk.id} value={desk.id}>{desk.name}</option>
-                  ))}
+                <select className="border p-2 rounded w-full text-gray-900 dark:text-gray-100 dark:border-gray-700 dark:bg-gray-700 my-5 focus:outline-border">
+                  {selectedDesk &&
+                    selectedDesk.map((desk: any) => (
+                      <option
+                        key={desk.id}
+                        value={desk.id}
+                        className="cursor-pointer"
+                      >
+                        {desk.name}
+                      </option>
+                    ))}
                 </select>
-                <Button type="submit" className="mt-4 bg-blue-500 dark:bg-blue-700 text-white">
-                  Submit
-                </Button>
+                <Button type="submit">Submit</Button>
               </form>
             </div>
-        </Dialog>
+          </Dialog>
         )}
       </main>
     </Layout>
