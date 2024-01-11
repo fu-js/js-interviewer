@@ -1,4 +1,3 @@
-import { useState } from "react";
 import BackButton from "@/components/custom/back-button";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
@@ -12,35 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlusIcon, PersonIcon } from "@radix-ui/react-icons";
+import { useToast } from "@/components/ui/use-toast";
+import requestBackend from "@/lib/requestBackend";
 import useFetch from "@/lib/useFetch";
 import { Dialog } from "@headlessui/react";
-import requestBackend from "@/lib/requestBackend";
-import { useToast } from "@/components/ui/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-// let checkedInCandidates = [{
-//   "id": 41,
-//   "fullName": "Nguyễn Đức Thắng",
-//   "department": {
-//     "id": 1,
-//     "name": "Ban Văn hóa"
-//   },
-//   "phoneNumber": "945228637",
-//   "interviewSlot": {
-//     "id": 1,
-//     "order": 0,
-//     "slotTime": "7h00-9h00"
-//   }
-// }];
+import { PlusIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 
 const interviewDesk = [
   {
@@ -91,11 +67,11 @@ export default function Coordinator() {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     // Handle your submission logic here
-    console.log("Selected Candidate: ", selectedCandidate);
+    // console.log("Selected Candidate: ", selectedCandidate);
 
     // get selected desk
     const selectedDeskId = event.target.elements[0].value;
-    console.log("Selected Desk: ", selectedDeskId);
+    // console.log("Selected Desk: ", selectedDeskId);
 
     // fetch to add candidate to desk
     // PUT /interview-server/public/v1/coordinator/send-to-interview-desk
@@ -166,10 +142,6 @@ export default function Coordinator() {
                             <PlusIcon className="mr-2" />
                             Assign
                           </Button>
-                          {/* <Button variant="outline" className="mx-2">
-                            <PersonIcon className="mr-2" />
-                            View Profile
-                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>
