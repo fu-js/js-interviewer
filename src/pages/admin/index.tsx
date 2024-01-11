@@ -16,13 +16,15 @@ export default function () {
       limit: 100,
       departmentId: [1, 2, 3, 4, 5],
       status: "INTERVIEWED",
-    }
+    },
+    { revalidateOnFocus: false }
   );
 
-  const useCount = (status: string) => {
+  const useCount = (decision: string) => {
     const { data } = useFetch(
       `${process.env.BACKEND_URL}/analysis/count-by-decision`,
-      { status }
+      { status: decision },
+      { revalidateOnFocus: false }
     );
     return data;
   };

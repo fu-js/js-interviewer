@@ -13,6 +13,9 @@ export default function Home() {
         <div className="absolute right-2 top-2">
           <ModeToggle />
         </div>
+        <div className="p-8">
+          <h1 className="font-bold text-4xl">Welcome to JS Coordinator</h1>
+        </div>
       </main>
     </Layout>
   );

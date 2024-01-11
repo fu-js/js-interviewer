@@ -62,10 +62,10 @@ export default function Interview() {
 function InterviewDeskButton({ desk }: { desk: any }) {
   return (
     <div className="flex justify-center items-center" key={desk.id}>
-      <Button asChild size="lg">
+      <Button asChild size="lg" variant="outline">
         <Link href={"/interview/" + desk.id}>
           {desk.name}
-          <ChevronRightIcon className="h-4 w-4" />
+          <ChevronRightIcon className="h-4 w-4 ml-2" />
         </Link>
       </Button>
     </div>

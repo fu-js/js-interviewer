@@ -20,7 +20,7 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
   );
   const [note, setNote] = useState("");
   const [isStarted, setIsStarted] = useState(
-    candidate.status === Status.INTERVIEWING
+    candidate.candidateStatus === Status.INTERVIEWING
   );
   const { toast } = useToast();
   const router = useRouter();
