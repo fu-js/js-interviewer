@@ -43,7 +43,7 @@ export default function Checkin() {
   );
 
   const searchByKeyword = () => {
-    setKeyword(inputRef.current?.value || "");
+    setKeyword(inputRef.current?.value.trim() || "");
   };
   const getStudentCode = (candidate: any) => {
     if (!candidate) return "Not found";
