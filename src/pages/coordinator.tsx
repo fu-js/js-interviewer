@@ -132,11 +132,13 @@ export default function Coordinator() {
                 {checkedInCandidates &&
                   checkedInCandidates.data.candidates.map((candidate: any) => (
                     <TableRow key={candidate.id}>
-                      <TableCell>{candidate.fullName}</TableCell>
+                      <TableCell>
+                        <b>{candidate.fullName}</b>
+                      </TableCell>
                       <TableCell>{candidate.department.name}</TableCell>
                       <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
                       <TableCell>
-                        {candidate.interviewDesk?.name || "---"}
+                        {candidate.interviewDesk || "---"}
                       </TableCell>
                       <TableCell>{candidate.status}</TableCell>
                       <TableCell>
