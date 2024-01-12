@@ -74,18 +74,18 @@ export default function Coordinator() {
     // console.log("Selected Desk: ", selectedDeskId);
 
     // fetch to add candidate to desk
-    // PUT /interview-server/public/v1/coordinator/send-to-interview-desk
     const assign = async (candidate: any) => {
       // PUT to /coordinator/send-to-interview-desk?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}
-      const checkinRes = await requestBackend(
-        `/coordinator/send-to-interview-desk?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}`,
-        {},
-        { method: "PUT" }
+      const checkinRes = await fetch(
+        `${process.env.BACKEND_URL}/coordinator/send-to-interview-desk?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}`,
+        {
+          method: "PUT",
+        }
       );
 
       const status = checkinRes.status;
       if (status === 200) {
-        toast({ title: "Assign successfully" });
+        toast({ title: "Assign success" });
         reloadCheckedInCandidates();
       } else {
         toast({ title: "Assign failed" });
@@ -158,7 +158,7 @@ export default function Coordinator() {
           </div>
           <div className="border rounded-lg">
             <h3 className="text-center text-2xl font-bold p-3">
-              Interview Desks
+              Free Interview Desks
             </h3>
             <Table>
               <TableHeader className="border-t">
@@ -173,7 +173,7 @@ export default function Coordinator() {
                   <TableRow key={desk.id}>
                     <TableCell>{desk.name}</TableCell>
                     <TableCell>{desk.department}</TableCell>
-                    <TableCell>{desk.status}</TableCell>
+                    <TableCell>Free</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
