@@ -12,13 +12,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function ({ onDone, onNoteSubmit, candidate }: any) {
-  const { fullName, department, id } = candidate;
+  const { fullName, department, id } = candidate || {};
   const [decision, setDecision] = useState(
-    candidate.decision || Decision.NOT_DECIDED
+    candidate?.decision || Decision.NOT_DECIDED
   );
   const [note, setNote] = useState("");
   const [isStarted, setIsStarted] = useState(
-    candidate.candidateStatus === Status.INTERVIEWING
+    candidate?.candidateStatus === Status.INTERVIEWING
   );
   const { toast } = useToast();
 
@@ -72,7 +72,7 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
       <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
         <p className="text-lg font-medium p-2 text-center">{fullName}</p>
         <p className="text-muted-foreground p-1 text-center">
-          {department.name}
+          {department?.name}
         </p>
       </div>
       <div className="flex gap-4 w-full">

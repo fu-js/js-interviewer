@@ -12,40 +12,38 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
+import enumValues from "@/lib/enum-values";
 import requestBackend from "@/lib/requestBackend";
+import DeskStatus from "@/lib/types/desk-status";
 import useFetch from "@/lib/useFetch";
 import { Dialog } from "@headlessui/react";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
-const interviewDesk = [
-  {
-    id: 1,
-    name: "Ban văn hoá 1",
-    department: "Văn hóa",
-    status: "Available",
-  },
-  {
-    id: 2,
-    name: "Ban văn hóa 2",
-    department: "Văn hóa",
-    status: "Interviewing",
-  },
-  {
-    id: 3,
-    name: "Ban chuyên môn 1",
-    department: "Chuyên môn",
-    status: "Assigned",
-  },
-];
-
 export default function Coordinator() {
   const { data: checkedInCandidates, mutate: reloadCheckedInCandidates } =
-    useFetch(`/coordinator/checked-in`, {
-      page: 0,
-      limit: 100,
+    useFetch(
+      `/coordinator/checked-in`,
+      {
+        page: 0,
+        limit: 100,
+        departmentId: [1, 2, 3, 4, 5],
+      },
+      {
+        refreshInterval: 10000,
+      }
+    );
+
+  const { data: desksData, mutate: reloadDeskData } = useFetch(
+    `${process.env.BACKEND_URL}/interview-desk/list-all-interview-desk`,
+    {
+      status: [enumValues(DeskStatus)],
       departmentId: [1, 2, 3, 4, 5],
-    });
+    },
+    {
+      refreshInterval: 10000,
+    }
+  );
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState<any>({});
@@ -58,8 +56,10 @@ export default function Coordinator() {
     setSelectedCandidate(candidate);
 
     const selectedDepartment = candidate.department.name;
-    const filteredDesk = interviewDesk.filter((desk: any) =>
-      selectedDepartment.toLowerCase().includes(desk.department.toLowerCase())
+    const filteredDesk = desksData.data.filter((desk: any) =>
+      selectedDepartment
+        .toLowerCase()
+        .includes(desk.department.name.toLowerCase())
     );
     setSelectedDesk(filteredDesk);
   };
@@ -88,6 +88,7 @@ export default function Coordinator() {
       if (status === 200) {
         toast({ title: "Assign successfully" });
         reloadCheckedInCandidates();
+        reloadDeskData();
       } else {
         toast({ title: "Assign failed" });
       }
@@ -122,7 +123,7 @@ export default function Coordinator() {
                   <TableHead>Full Name</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Slot Time</TableHead>
-                  <TableHead>Action</TableHead>
+                  <TableHead className="w-40">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -132,17 +133,15 @@ export default function Coordinator() {
                       <TableCell>{candidate.fullName}</TableCell>
                       <TableCell>{candidate.department.name}</TableCell>
                       <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-2">
-                          <Button
-                            className="mx-2"
-                            variant="outline"
-                            onClick={() => togglePopup(candidate)}
-                          >
-                            <PlusIcon className="mr-2" />
-                            Assign
-                          </Button>
-                        </div>
+                      <TableCell className="w-40">
+                        <Button
+                          className="mx-2"
+                          variant="outline"
+                          onClick={() => togglePopup(candidate)}
+                        >
+                          <PlusIcon className="mr-2" />
+                          Assign
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -170,13 +169,14 @@ export default function Coordinator() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {interviewDesk.map((desk: any) => (
-                  <TableRow key={desk.id}>
-                    <TableCell>{desk.name}</TableCell>
-                    <TableCell>{desk.department}</TableCell>
-                    <TableCell>{desk.status}</TableCell>
-                  </TableRow>
-                ))}
+                {desksData &&
+                  desksData.data.map((desk: any) => (
+                    <TableRow key={desk.id}>
+                      <TableCell>{desk.name}</TableCell>
+                      <TableCell>{desk.department.name}</TableCell>
+                      <TableCell>{desk.status}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </div>
@@ -188,13 +188,15 @@ export default function Coordinator() {
             onClose={() => setIsPopupOpen(false)}
             className={`fixed flex justify-center items-center inset-0 z-10 overflow-y-auto`}
           >
-            <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            <Dialog.Overlay className="fixed inset-0 bg-black opacity-60" />
             <div
-              className={`relative bg-background border rounded-lg max-w-sm p-8`}
+              className={`relative bg-background border rounded-lg max-w-md p-8`}
             >
-              <Dialog.Title className="">Assign Candidate</Dialog.Title>
+              <Dialog.Title className="font-semibold">
+                Assign Candidate
+              </Dialog.Title>
               <form onSubmit={handleSubmit}>
-                <select className="border p-2 rounded w-full text-gray-900 dark:text-gray-100 dark:border-gray-700 dark:bg-gray-700 my-5 focus:outline-border">
+                <select className="border p-2 rounded-lg w-full text-gray-900 dark:text-gray-100 dark:border-gray-700 dark:bg-gray-700 my-5 focus:outline-muted">
                   {selectedDesk &&
                     selectedDesk.map((desk: any) => (
                       <option
@@ -206,7 +208,9 @@ export default function Coordinator() {
                       </option>
                     ))}
                 </select>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" className="w-full">
+                  Assign
+                </Button>
               </form>
             </div>
           </Dialog>
