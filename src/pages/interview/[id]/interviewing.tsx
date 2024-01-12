@@ -31,8 +31,7 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
       .then((res) => res.json())
       .then((res) => {
         const metadataRaw = res.data.metadata;
-        const metadata = JSON.parse(metadataRaw);
-        console.log(metadata);
+        const metadata = JSON.parse(metadataRaw || "[{}]");
         setDetail(metadata);
       });
   }, []);
