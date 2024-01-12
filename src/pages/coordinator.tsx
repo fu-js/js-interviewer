@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import requestBackend from "@/lib/requestBackend";
+import Status from "@/lib/types/status";
 import useFetch from "@/lib/useFetch";
-import { Dialog } from "@headlessui/react";
+import { Dialog, Tab } from "@headlessui/react";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
@@ -121,6 +122,7 @@ export default function Coordinator() {
                   <TableHead>Full Name</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Slot Time</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -131,9 +133,11 @@ export default function Coordinator() {
                       <TableCell>{candidate.fullName}</TableCell>
                       <TableCell>{candidate.department.name}</TableCell>
                       <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
+                      <TableCell>{candidate.status}</TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-2">
-                          <Button
+                          {candidate.status === Status.CHECKED_IN && (
+                            <Button
                             className="mx-2"
                             variant="outline"
                             onClick={() => togglePopup(candidate)}
@@ -141,19 +145,20 @@ export default function Coordinator() {
                             <PlusIcon className="mr-2" />
                             Assign
                           </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
-              <TableFooter>
+              {/* <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>Total Waiting</TableCell>
                   <TableCell className="text-right">
                     {checkedInCandidates?.data.candidates.length || "---"}
                   </TableCell>
                 </TableRow>
-              </TableFooter>
+              </TableFooter> */}
             </Table>
           </div>
           <div className="border rounded-lg">
