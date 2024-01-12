@@ -13,6 +13,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import requestBackend from "@/lib/requestBackend";
+import Decision from "@/lib/types/decision";
 import { useState } from "react";
 
 export default function ({ interviewee: candidateData }: { interviewee: any }) {
@@ -22,6 +23,11 @@ export default function ({ interviewee: candidateData }: { interviewee: any }) {
   const { toast } = useToast();
 
   const edit = async (candidate: any) => {
+    if (candidate.decision === Decision.NOT_DECIDED) {
+      toast({ title: "Please choose a decision" });
+      return false;
+    }
+
     const editRes = await requestBackend(
       `/analysis/decide`,
       { candidateId: candidate.id, decision: candidate.decision },
