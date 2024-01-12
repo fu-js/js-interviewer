@@ -13,7 +13,7 @@ export default function Interview() {
   const { isLoading, data: desksData } = useFetch(
     `${process.env.BACKEND_URL}/interview-desk/list-all-interview-desk`,
     {
-      status: [enumValues(DeskStatus)],
+      status: "FREE",
       departmentId: [1, 2, 3, 4, 5],
     }
   );

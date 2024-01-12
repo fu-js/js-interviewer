@@ -31,18 +31,18 @@ export default function Coordinator() {
         departmentId: [1, 2, 3, 4, 5],
       },
       {
-        refreshInterval: 10000,
+        refreshInterval: 2000,
       }
     );
 
   const { data: desksData, mutate: reloadDeskData } = useFetch(
     `${process.env.BACKEND_URL}/interview-desk/list-all-interview-desk`,
     {
-      status: [enumValues(DeskStatus)],
+      status: "FREE",
       departmentId: [1, 2, 3, 4, 5],
     },
     {
-      refreshInterval: 10000,
+      refreshInterval: 2000,
     }
   );
 
