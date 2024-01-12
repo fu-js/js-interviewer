@@ -23,10 +23,16 @@ export default function Interview() {
     data: candidates,
     isLoading: isLoadingCandidates,
     mutate: refetchCandidates,
-  } = useFetch(`${backendUrl}/interview-desk/${deskId || 1}`, {
-    page: 0,
-    limit: 100,
-  });
+  } = useFetch(
+    `${backendUrl}/interview-desk/${deskId || 1}`,
+    {
+      page: 0,
+      limit: 100,
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   const [inverviewingCandidate, setInterviewingCandidate] = useState<any>(null);
   const isInterviewing = (candidate: any) => {
@@ -115,9 +121,6 @@ export default function Interview() {
           <ModeToggle />
         </div>
         <BackButton href="/interview" />
-        <h1 className="text-4xl px-2 py-5 font-bold">
-          {"Bàn phỏng vấn " + deskId}
-        </h1>
         <h2 className="text-4xl text-center p-5 font-bold">Ongoing</h2>
         <If condition={!inverviewingCandidate}>
           <div className="border flex rounded-lg p-4 border-dashed border-border justify-center items-center">
@@ -127,17 +130,19 @@ export default function Interview() {
             </div>
           </div>
         </If>
-        <Interviewing
-          candidate={inverviewingCandidate}
-          onDone={doneInterviewing}
-          onNoteSubmit={submitNote}
-        />
+        {inverviewingCandidate && (
+          <Interviewing
+            candidate={inverviewingCandidate}
+            onDone={doneInterviewing}
+            onNoteSubmit={submitNote}
+          />
+        )}
         <h2 className="mt-20 text-4xl text-center p-5 font-bold">
           Interview table
         </h2>
         {candidates?.data?.candidates && !isLoadingCandidates && (
           <div className="border border-border rounded-lg overflow-hidden">
-            <InterviewTable data={candidates.data.candidates} onEdit={edit} />
+            <InterviewTable data={candidates?.data?.candidates} onEdit={edit} />
           </div>
         )}
       </main>
