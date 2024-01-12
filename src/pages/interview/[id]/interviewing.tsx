@@ -48,6 +48,11 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
   };
 
   const endInterview = async () => {
+    if (decision === Decision.NOT_DECIDED) {
+      toast({ title: "Please decide the candidate" });
+      return;
+    }
+
     await onDone({
       ...candidate,
       decision,
