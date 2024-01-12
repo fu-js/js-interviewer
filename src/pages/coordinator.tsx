@@ -123,6 +123,7 @@ export default function Coordinator() {
                   <TableHead>Full Name</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Slot Time</TableHead>
+                  <TableHead>Interview Desk</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Action</TableHead>
                 </TableRow>
@@ -134,6 +135,9 @@ export default function Coordinator() {
                       <TableCell>{candidate.fullName}</TableCell>
                       <TableCell>{candidate.department.name}</TableCell>
                       <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
+                      <TableCell>
+                        {candidate.interviewDesk?.name || "---"}
+                      </TableCell>
                       <TableCell>{candidate.status}</TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-2">
