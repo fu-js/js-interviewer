@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import fetcher from "./fetcher";
 
-export default function useFetch(url: string, params?: any) {
+export default function useFetch(url: string, params?: any, config?: any) {
   const backendUrl = process.env.BACKEND_URL;
   let urlAll;
   if (url.startsWith("http")) {
@@ -12,5 +12,5 @@ export default function useFetch(url: string, params?: any) {
   if (params) {
     urlAll.search = new URLSearchParams(params).toString();
   }
-  return useSWR(urlAll.toString(), fetcher);
+  return useSWR(urlAll.toString(), fetcher, config);
 }

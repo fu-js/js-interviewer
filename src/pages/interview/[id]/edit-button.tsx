@@ -26,7 +26,7 @@ export default function ({
         <Button variant="secondary">Edit</Button>
       </DialogTrigger>
       <DialogContent>
-        <div className="mx-auto w-full max-w-xl">
+        <div className="mx-auto w-full">
           <DialogHeader>
             <DialogTitle>
               <p className="text-xl font-medium">Edit</p>

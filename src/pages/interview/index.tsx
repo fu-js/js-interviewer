@@ -3,28 +3,20 @@ import If from "@/components/custom/if";
 import Layout from "@/components/custom/layout";
 import { ModeToggle } from "@/components/custom/mode-toggle";
 import { Button } from "@/components/ui/button";
-import fetcher from "@/lib/fetcher";
+import enumValues from "@/lib/enum-values";
+import DeskStatus from "@/lib/types/desk-status";
+import useFetch from "@/lib/useFetch";
 import { ChevronRightIcon, ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
 
 export default function Interview() {
-  const { isLoading, data: candidates } = useSWR(
-    `${process.env.BACKEND_URL}/coordinator/interview-desks?page=1&limit=10&departmentId=1,2`,
-    fetcher
+  const { isLoading, data: desksData } = useFetch(
+    `${process.env.BACKEND_URL}/interview-desk/list-all-interview-desk`,
+    {
+      status: [enumValues(DeskStatus)],
+      departmentId: [1, 2, 3, 4, 5],
+    }
   );
-
-  const [desks, setDesks] = useState<any[]>([]);
-  useEffect(() => {
-    if (!candidates) return;
-    const desks: any[] = candidates?.data.candidates.map((candidate: any) => ({
-      id: candidate.interviewDesk.id,
-      name: candidate.interviewDesk.name,
-    }));
-    const uniqueDesks = [...new Map(desks.map((item) => [item.id, item])).values()];
-    setDesks(uniqueDesks);
-  }, [candidates]);
 
   return (
     <Layout>
@@ -44,8 +36,8 @@ export default function Interview() {
         </If>
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
-          {desks &&
-            desks.map((desk: any, index: number) => (
+          {desksData &&
+            desksData.data.map((desk: any, index: number) => (
               <InterviewDeskButton key={index} desk={desk} />
             ))}
         </div>
@@ -57,10 +49,12 @@ export default function Interview() {
 function InterviewDeskButton({ desk }: { desk: any }) {
   return (
     <div className="flex justify-center items-center" key={desk.id}>
-      <Button asChild size="lg">
-        <Link href={"/interview/" + desk.id}>
-          {desk.name}
-          <ChevronRightIcon className="h-4 w-4" />
+      <Button asChild size="lg" variant="outline">
+        <Link href={"/interview/" + desk.id} className="">
+          <div className="flex gap-2 items-center">
+            {desk.name}
+            <ChevronRightIcon className="h-4 w-4 ml-2" />
+          </div>
         </Link>
       </Button>
     </div>

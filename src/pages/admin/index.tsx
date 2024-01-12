@@ -16,13 +16,15 @@ export default function () {
       limit: 100,
       departmentId: [1, 2, 3, 4, 5],
       status: "INTERVIEWED",
-    }
+    },
+    { revalidateOnFocus: false }
   );
 
-  const useCount = (status: string) => {
+  const useCount = (decision: string) => {
     const { data } = useFetch(
       `${process.env.BACKEND_URL}/analysis/count-by-decision`,
-      { status }
+      { status: decision },
+      { revalidateOnFocus: false }
     );
     return data;
   };
@@ -35,7 +37,7 @@ export default function () {
   return (
     <Layout>
       <div className="flex-1 space-y-4 px-8 pt-6">
-        <h2 className="text-3xl font-bold tracking-tight">Admin</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Analysis</h2>
       </div>
       <div className="p-8 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         {notDecidedData && (

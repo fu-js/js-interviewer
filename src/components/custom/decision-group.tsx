@@ -5,15 +5,17 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 export default function ({
   defaultValue,
   onValueChange,
+  orientation = "horizontal",
 }: {
   defaultValue: Decision;
   onValueChange: (decision: Decision) => void;
+  orientation?: "vertical" | "horizontal";
 }) {
   return (
     <RadioGroup
       defaultValue={defaultValue}
       onValueChange={onValueChange}
-      className="flex gap-4"
+      className={`flex ${orientation === "vertical" ? "flex-col" : ""} gap-4`}
     >
       {Object.keys(Decision).map((key) => (
         <div className="flex items-center space-x-2" key={key}>

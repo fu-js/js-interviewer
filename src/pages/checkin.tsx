@@ -27,15 +27,23 @@ export default function Checkin() {
     data: checkinData,
     isLoading: isLoadingCheckinData,
     mutate: reloadCheckinData,
-  } = useFetch(`/checkin/`, {
-    page: 0,
-    limit: 100,
-    keyword,
-    departmentId: [1, 2, 3, 4, 5],
-  });
+  } = useFetch(
+    `/checkin/`,
+    {
+      page: 0,
+      limit: 100,
+      keyword,
+      departmentId: [1, 2, 3, 4, 5],
+    },
+    {
+      refreshInterval: 1000000,
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+    }
+  );
 
   const searchByKeyword = () => {
-    setKeyword(inputRef.current?.value || "");
+    setKeyword(inputRef.current?.value.trim() || "");
   };
   const getStudentCode = (candidate: any) => {
     if (!candidate) return "Not found";
@@ -103,6 +111,7 @@ export default function Checkin() {
                   <TableHead>Name</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Student code</TableHead>
+                  <TableHead>Interview time</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -114,6 +123,7 @@ export default function Checkin() {
                     </TableCell>
                     <TableCell>{candidate.department.name}</TableCell>
                     <TableCell>{getStudentCode(candidate)}</TableCell>
+                    <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
                     <TableCell className="text-right">
                       <ConfirmButton
                         actionName="Check in"
