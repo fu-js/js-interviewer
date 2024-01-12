@@ -30,6 +30,7 @@ export default function Interview() {
       limit: 100,
     },
     {
+      refreshInterval: 2000,
       revalidateOnFocus: false,
     }
   );
@@ -38,7 +39,8 @@ export default function Interview() {
   const isInterviewing = (candidate: any) => {
     return (
       candidate.candidateStatus === Status.BROWSING_PROFILE ||
-      candidate.candidateStatus === Status.INTERVIEWING
+      candidate.candidateStatus === Status.INTERVIEWING ||
+      candidate.candidateStatus === Status.BROWSED_PROFILE
     );
   };
   const filterInterviewingCandidate = () => {
@@ -82,8 +84,8 @@ export default function Interview() {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "PUT",
-        body: JSON.stringify({ candidateId: candidate.id, note: note }),
+        method: "POST",
+        body: JSON.stringify({ candidateId: candidate.id, content: note }),
       }
     );
     const noteStatus = noteResponse.status;

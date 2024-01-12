@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import requestBackend from "@/lib/requestBackend";
 import Decision from "@/lib/types/decision";
 import Status from "@/lib/types/status";
+import { createKey } from "next/dist/shared/lib/router/router";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -19,6 +20,9 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
   const [note, setNote] = useState("");
   const [isStarted, setIsStarted] = useState(
     candidate?.candidateStatus === Status.INTERVIEWING
+  );
+  const [isBrowsing, setIsBrowsing] = useState(
+    candidate?.candidateStatus === Status.BROWSING_PROFILE
   );
   const { toast } = useToast();
 
@@ -66,6 +70,26 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
     }
   };
 
+  const readyInterview = async () => {
+    const postReadyResponse = await requestBackend(
+      `/interview-desk/${interviewDeskId}/ready`,
+      {
+        candidateId: candidate.id,
+        interviewDeskId,
+      },
+      { method: "PUT" }
+    );
+
+    const status = postReadyResponse.status;
+    if (status === 200) {
+      console.log("lsdkjflsdjfklsd");
+      toast({ title: "Ready to interview" });
+      setIsBrowsing(false);
+    } else {
+      toast({ title: "Failed to ready interview" });
+    }
+  };
+
   return (
     <div className="space-y-5">
       <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border">
@@ -91,7 +115,12 @@ export default function ({ onDone, onNoteSubmit, candidate }: any) {
           </div>
         </div>
         <div className="border rounded-lg overflow-hidden p-4 border-dashed border-border grow lg:min-w-[50ch]">
-          <If condition={!isStarted}>
+          <If condition={isBrowsing}>
+            <LoadButton className="w-full" onClick={readyInterview}>
+              <span>Ready to interview</span>
+            </LoadButton>
+          </If>
+          <If condition={!isBrowsing && !isStarted}>
             <LoadButton className="w-full" onClick={startInterview}>
               <span>Start interview</span>
             </LoadButton>
