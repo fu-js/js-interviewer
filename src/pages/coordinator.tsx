@@ -77,11 +77,7 @@ export default function Coordinator() {
     // PUT /interview-server/public/v1/coordinator/send-to-interview-desk
     const assign = async (candidate: any) => {
       const checkinRes = await requestBackend(
-        `/coordinator/send-to-interview-desk`,
-        {
-          candidateId: candidate.id,
-          interviewDeskId: selectedDeskId,
-        },
+        `/coordinator/send-to-interview-desk/?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}`,
         { method: "PUT" }
       );
       const status = checkinRes.status;
