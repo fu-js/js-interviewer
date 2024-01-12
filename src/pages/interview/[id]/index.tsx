@@ -31,7 +31,7 @@ export default function Interview() {
   const [inverviewingCandidate, setInterviewingCandidate] = useState<any>(null);
   const isInterviewing = (candidate: any) => {
     return (
-      candidate.candidateStatus === Status.CHECKED_IN ||
+      candidate.candidateStatus === Status.BROWSING_PROFILE ||
       candidate.candidateStatus === Status.INTERVIEWING
     );
   };

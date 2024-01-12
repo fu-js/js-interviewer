@@ -76,10 +76,13 @@ export default function Coordinator() {
     // fetch to add candidate to desk
     // PUT /interview-server/public/v1/coordinator/send-to-interview-desk
     const assign = async (candidate: any) => {
+      // PUT to /coordinator/send-to-interview-desk?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}
       const checkinRes = await requestBackend(
-        `/coordinator/send-to-interview-desk/?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}`,
+        `/coordinator/send-to-interview-desk?candidateId=${candidate.id}&interviewDeskId=${selectedDeskId}`,
+        {},
         { method: "PUT" }
       );
+
       const status = checkinRes.status;
       if (status === 200) {
         toast({ title: "Assign successfully" });
