@@ -116,7 +116,7 @@ export default function Checkin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {checkinData.data.candidates.map((candidate: any) => (
+                {checkinData?.data?.candidates?.map((candidate: any) => (
                   <TableRow key={candidate.id}>
                     <TableCell className="font-medium">
                       {candidate.fullName}

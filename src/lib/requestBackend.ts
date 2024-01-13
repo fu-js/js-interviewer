@@ -18,6 +18,7 @@ export default async function requestBackend(
     return {
       data: {},
       message: "FAILED",
+      status: 500,
     };
   });
 }
