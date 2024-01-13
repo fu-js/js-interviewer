@@ -50,10 +50,11 @@ export default function Checkin() {
     const metadata = candidate.metadata;
     const json = JSON.parse(metadata);
     for (const item of json) {
-      if (item.title === "Mã số sinh viên:") {
+      if (item.title === "Mã số sinh viên:" || item.title === "MSSV") {
         return item.content;
       }
     }
+    return "---"
   };
 
   const enterToSearch = (e: any) => {

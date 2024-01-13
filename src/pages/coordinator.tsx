@@ -20,6 +20,7 @@ import useFetch from "@/lib/useFetch";
 import { Dialog, Tab } from "@headlessui/react";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function Coordinator() {
   const { data: checkedInCandidates, mutate: reloadCheckedInCandidates } =
@@ -31,7 +32,7 @@ export default function Coordinator() {
         departmentId: [1, 2, 3, 4, 5],
       },
       {
-        refreshInterval: 2000,
+        refreshInterval: 10000,
       }
     );
 
@@ -42,7 +43,7 @@ export default function Coordinator() {
       departmentId: [1, 2, 3, 4, 5],
     },
     {
-      refreshInterval: 2000,
+      refreshInterval: 10000,
     }
   );
 
@@ -137,21 +138,19 @@ export default function Coordinator() {
                       </TableCell>
                       <TableCell>{candidate.department.name}</TableCell>
                       <TableCell>{candidate.interviewSlot.slotTime}</TableCell>
-                      <TableCell>
-                        {candidate.interviewDesk || "---"}
-                      </TableCell>
+                      <TableCell>{candidate.interviewDesk || "---"}</TableCell>
                       <TableCell>{candidate.status}</TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-2">
                           {candidate.status === Status.CHECKED_IN && (
                             <Button
-                            className="mx-2"
-                            variant="outline"
-                            onClick={() => togglePopup(candidate)}
-                          >
-                            <PlusIcon className="mr-2" />
-                            Assign
-                          </Button>
+                              className="mx-2"
+                              variant="outline"
+                              onClick={() => togglePopup(candidate)}
+                            >
+                              <PlusIcon className="mr-2" />
+                              Assign
+                            </Button>
                           )}
                         </div>
                       </TableCell>
@@ -162,13 +161,13 @@ export default function Coordinator() {
                 <TableRow>
                   <TableCell colSpan={3}>Total Waiting</TableCell>
                   <TableCell className="text-right">
-                    {checkedInCandidates?.data.candidates.length || "---"}
+                  {checkedInCandidates?.data.candidates.length || "---"}
                   </TableCell>
                 </TableRow>
               </TableFooter> */}
             </Table>
           </div>
-          <div className="border rounded-lg">
+          <div className="border rounded-lg max-h-[60vh] overflow-y-auto">
             <h3 className="text-center text-2xl font-bold p-3">
               Free Interview Desks
             </h3>
@@ -208,7 +207,7 @@ export default function Coordinator() {
                 Assign Candidate
               </Dialog.Title>
               <form onSubmit={handleSubmit}>
-                <select className="border p-2 rounded-lg w-full text-gray-900 dark:text-gray-100 dark:border-gray-700 dark:bg-gray-700 my-5 focus:outline-muted">
+                <select className="border p-3 rounded-lg w-full text-gray-900 dark:text-gray-100 dark:border-gray-700 dark:bg-gray-700 my-5 focus:outline-muted">
                   {selectedDesk &&
                     selectedDesk.map((desk: any) => (
                       <option
@@ -216,10 +215,13 @@ export default function Coordinator() {
                         value={desk.id}
                         className="cursor-pointer"
                       >
-                        {desk.name}
+                        {desk.name + " : " + desk.department.name}
                       </option>
                     ))}
                 </select>
+                <p className="text-muted-foreground pb-3">
+                  *Please check the table carefully
+                </p>
                 <Button type="submit" className="w-full">
                   Assign
                 </Button>

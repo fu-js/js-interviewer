@@ -52,7 +52,7 @@ export default function () {
       <div className="p-4">
         {candidateData && (
           <div className="mx-4 rounded-xl border border-border">
-            <InterviewTable data={candidateData.data.candidates} />
+            <InterviewTable data={candidateData?.data?.candidates} />
           </div>
         )}
       </div>
@@ -65,7 +65,7 @@ function Count({ title, count }: { title: string; count: number }) {
     <Card>
       <CardHeader>
         <CardDescription>{title}</CardDescription>
-        <CardTitle>{count}</CardTitle>
+        <CardTitle>{count || "---"}</CardTitle>
       </CardHeader>
     </Card>
   );
