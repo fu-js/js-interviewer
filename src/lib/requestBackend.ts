@@ -14,5 +14,10 @@ export default async function requestBackend(
     const searchParams = new URLSearchParams(params);
     urlObj.search = searchParams.toString();
   }
-  return fetch(urlObj, config);
+  return fetch(urlObj, config).catch((err) => {
+    return {
+      data: {},
+      message: "FAILED",
+    };
+  });
 }
