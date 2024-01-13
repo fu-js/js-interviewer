@@ -31,7 +31,7 @@ export default function Coordinator() {
         departmentId: [1, 2, 3, 4, 5],
       },
       {
-        refreshInterval: 2000,
+        refreshInterval: 5000,
       }
     );
 
@@ -42,7 +42,7 @@ export default function Coordinator() {
       departmentId: [1, 2, 3, 4, 5],
     },
     {
-      refreshInterval: 2000,
+      refreshInterval: 5000,
     }
   );
 
