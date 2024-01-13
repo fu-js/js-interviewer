@@ -20,11 +20,38 @@ export default function ({ interviewee: candidateData }: { interviewee: any }) {
   if (!candidateData) return null;
 
   const [candidate, setCandidate] = useState(candidateData);
+  const [notes, setNotes] = useState([]);
+  const { toast } = useToast();
+
+  const fetchNote = async () => {
+    const notesRes = await requestBackend(
+      `/analysis/notes`,
+      {
+        candidateId: candidate.id,
+      },
+      { method: "GET" }
+    );
+
+    const status = notesRes.status;
+    if (status === 200) {
+      const notes = await notesRes.json();
+      setNotes(notes.data);
+    } else {
+      toast({
+        title: "Fetch failed",
+        description: "Notes has not been fetched",
+      });
+    }
+
+    return status;
+  }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">View notes</Button>
+        <Button variant="secondary" onClick={fetchNote}>
+          View notes
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <div className="mx-auto w-full">
@@ -36,14 +63,16 @@ export default function ({ interviewee: candidateData }: { interviewee: any }) {
               {candidate?.fullName} - {candidate?.department.name}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <DecisionGroup
-              defaultValue={candidateData.decision}
-              onValueChange={(decision) =>
-                setCandidate({ ...candidate, decision })
-              }
-            />
-          </div>
+          <ScrollArea className="h-96 py-4">
+            <div className="flex flex-col gap-4">
+              {notes.map((note: any) => (
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm">{note}</p>
+                  <hr className="border-gray-200 dark:border-gray-600 dark:border-opacity-50 border-opacity-50" />
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Close</Button>
