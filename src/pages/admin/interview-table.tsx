@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import EditButton from "./edit-button";
+import ViewNoteButton from "./view-note-button";
 
 export default function ({ data }: any) {
   if (!data) return null;
@@ -31,6 +32,9 @@ export default function ({ data }: any) {
             <TableCell>{interviewee.decision}</TableCell>
             <TableCell className="text-right">
               <EditButton
+                interviewee={interviewee}
+              />
+              <ViewNoteButton
                 interviewee={interviewee}
               />
             </TableCell>
