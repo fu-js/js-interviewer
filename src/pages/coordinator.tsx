@@ -6,21 +6,16 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
-import enumValues from "@/lib/enum-values";
-import requestBackend from "@/lib/requestBackend";
 import Status from "@/lib/types/status";
-import DeskStatus from "@/lib/types/desk-status";
 import useFetch from "@/lib/useFetch";
-import { Dialog, Tab } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function Coordinator() {
   const { data: checkedInCandidates, mutate: reloadCheckedInCandidates } =
@@ -131,7 +126,7 @@ export default function Coordinator() {
               </TableHeader>
               <TableBody>
                 {checkedInCandidates &&
-                  checkedInCandidates.data.candidates.map((candidate: any) => (
+                  checkedInCandidates?.data?.candidates?.map((candidate: any) => (
                     <TableRow key={candidate.id}>
                       <TableCell>
                         <b>{candidate.fullName}</b>
@@ -181,7 +176,7 @@ export default function Coordinator() {
               </TableHeader>
               <TableBody>
                 {desksData &&
-                  desksData.data.map((desk: any) => (
+                  desksData.data?.map((desk: any) => (
                     <TableRow key={desk.id}>
                       <TableCell>{desk.name}</TableCell>
                       <TableCell>{desk.department.name}</TableCell>

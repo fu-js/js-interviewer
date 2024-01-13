@@ -105,7 +105,7 @@ export default function Checkin() {
           </div>
         )}
         {checkinData && (
-          <div className="border rounded-lg">
+          <div className="border rounded-lg max-h-[70vh] overflow-y-auto">
             <Table>
               <TableHeader>
                 <TableRow>
