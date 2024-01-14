@@ -9,9 +9,13 @@ import {
 import EditButton from "./edit-button";
 import ViewNoteButton from "./view-note-button";
 
-export default function ({ data }: any) {
+export default function ({ data, decision }: any) {
   if (!data) return null;
 
+  if (decision !== "ALL") {
+    data = data.filter((interviewee: any) => interviewee.decision === decision);
+  }
+  
   return (
     <Table>
       <TableHeader>

@@ -25,7 +25,7 @@ export default function () {
   const [keyword, setKeyword] = useState("");
   const [departmentList, setDepartmentList] = useState([1, 2, 3, 4, 5]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const selectDepartmentRef = useRef<HTMLSelectElement>(null);
+  const [decision, setDecision] = useState("ALL");
 
   const {
     data: candidateData,
@@ -88,15 +88,20 @@ export default function () {
                 }
               }}
             />
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                setDecision(value);
+              }}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Decision" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="ALL">All</SelectItem>
                 <SelectItem value="NOT_DECIDED">Not Decided</SelectItem>
-                <SelectItem value="PASS">PASS</SelectItem>
+                <SelectItem value="PASS">Pass</SelectItem>
                 <SelectItem value="CONSIDERING">Considering</SelectItem>
-                <SelectItem value="FAIL">FAIL</SelectItem>
+                <SelectItem value="FAIL">Fail</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -130,7 +135,7 @@ export default function () {
       <div className="p-4">
         {candidateData && (
           <div className="mx-4 rounded-xl border border-border">
-            <InterviewTable data={candidateData?.data?.candidates} />
+            <InterviewTable data={candidateData?.data?.candidates} decision={decision} />
           </div>
         )}
       </div>
