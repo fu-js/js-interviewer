@@ -67,7 +67,7 @@ export default function ({ interviewee: candidateData }: { interviewee: any }) {
             <div className="flex flex-col gap-4">
               {notes.map((note: any) => (
                 <div className="flex flex-col gap-2">
-                  <p className="text-sm">{note}</p>
+                  <p className="text-sm whitespace-pre-wrap">{note}</p>
                   <hr className="border-gray-200 dark:border-gray-600 dark:border-opacity-50 border-opacity-50" />
                 </div>
               ))}
