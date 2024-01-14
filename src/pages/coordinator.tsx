@@ -16,6 +16,12 @@ import useFetch from "@/lib/useFetch";
 import { Dialog } from "@headlessui/react";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+ 
+const sortDetails = [
+  "BROWSED_PROFILE",
+  "BROWSING_PROFILE",
+  "CHECKED_IN"
+]
 
 export default function Coordinator() {
   const { data: checkedInCandidates, mutate: reloadCheckedInCandidates } =
@@ -63,12 +69,7 @@ export default function Coordinator() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    // Handle your submission logic here
-    // console.log("Selected Candidate: ", selectedCandidate);
-
-    // get selected desk
     const selectedDeskId = event.target.elements[0].value;
-    // console.log("Selected Desk: ", selectedDeskId);
 
     // fetch to add candidate to desk
     const assign = async (candidate: any) => {
@@ -126,7 +127,8 @@ export default function Coordinator() {
               </TableHeader>
               <TableBody>
                 {checkedInCandidates &&
-                  checkedInCandidates?.data?.candidates?.map((candidate: any) => (
+                  checkedInCandidates?.data?.candidates?.sort((a: any, b: any) => sortDetails.indexOf(a.status) - sortDetails.indexOf(b.status))
+                  .map((candidate: any) => (
                     <TableRow key={candidate.id}>
                       <TableCell>
                         <b>{candidate.fullName}</b>
