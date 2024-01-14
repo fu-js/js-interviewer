@@ -19,10 +19,13 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Department from "@/lib/types/department";
 import { getAllDepartmentName } from "@/lib/types/department";
+import { isNumberObject } from "util/types";
 
 export default function () {
   const [keyword, setKeyword] = useState("");
+  const [departmentList, setDepartmentList] = useState([1, 2, 3, 4, 5]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const selectDepartmentRef = useRef<HTMLSelectElement>(null);
 
   const {
     data: candidateData,
@@ -32,7 +35,7 @@ export default function () {
     {
       page: 0,
       limit: 100,
-      departmentId: [1, 2, 3, 4, 5],
+      departmentId: departmentList,
       status: "INTERVIEWED",
       keyword,
     },
@@ -96,11 +99,20 @@ export default function () {
                 <SelectItem value="FAIL">FAIL</SelectItem>
               </SelectContent>
             </Select>
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                if (value === "All") {
+                  setDepartmentList([1, 2, 3, 4, 5]);
+                } else {
+                  setDepartmentList([Number(value)]);
+                }
+              }}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Department" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="All">All</SelectItem>
                 {getAllDepartmentName().map((key: any) => (
                   <SelectItem key={key} value={Department[key]}>
                     {key}
