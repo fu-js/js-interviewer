@@ -20,6 +20,7 @@ export default function ({ data, decision }: any) {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>#</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Dept</TableHead>
           <TableHead>Decision</TableHead>
@@ -27,8 +28,9 @@ export default function ({ data, decision }: any) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((interviewee: any) => (
+        {data.map((interviewee: any, i: any) => (
           <TableRow key={interviewee.id}>
+            <TableCell>{i + 1}</TableCell>
             <TableCell className="font-medium">
               {interviewee.fullName}
             </TableCell>

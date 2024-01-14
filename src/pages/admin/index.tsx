@@ -34,7 +34,7 @@ export default function () {
     `${process.env.BACKEND_URL}/analysis/`,
     {
       page: 0,
-      limit: 100,
+      limit: 300,
       departmentId: departmentList,
       status: "INTERVIEWED",
       keyword,
@@ -77,7 +77,7 @@ export default function () {
       <div className="flex gap-4 py-2 px-8">
             <Input
               type="text"
-              placeholder="Search for anything..."
+              placeholder="Enter to search"
               className=""
               defaultValue={keyword}
               ref={inputRef}
@@ -125,16 +125,16 @@ export default function () {
                 ))}
               </SelectContent>
             </Select>
-            <Button
+            {/* <Button
               onClick={() => {
                 setKeyword(inputRef.current?.value.trim() || "");
                 reloadCandidateData();
               }}
-            >Search</Button>
+            >Search</Button> */}
         </div>
       <div className="p-4">
         {candidateData && (
-          <div className="mx-4 rounded-xl border border-border">
+          <div className="mx-4 rounded-xl border border-border max-h-[60vh] overflow-y-auto">
             <InterviewTable data={candidateData?.data?.candidates} decision={decision} />
           </div>
         )}
