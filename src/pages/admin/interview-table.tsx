@@ -34,6 +34,7 @@ export default function ({ data }: any) {
               <EditButton
                 interviewee={interviewee}
               />
+              <span className="mx-2"></span>
               <ViewNoteButton
                 interviewee={interviewee}
               />

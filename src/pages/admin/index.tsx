@@ -5,19 +5,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import useFetch from "@/lib/useFetch";
 import InterviewTable from "./interview-table";
+import { Input } from "@/components/ui/input";
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import Department from "@/lib/types/department";
+import { getAllDepartmentName } from "@/lib/types/department";
 
 export default function () {
-  const { data: candidateData } = useFetch(
+  const [keyword, setKeyword] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    data: candidateData,
+    mutate: reloadCandidateData,
+  } = useFetch(
     `${process.env.BACKEND_URL}/analysis/`,
     {
       page: 0,
       limit: 100,
       departmentId: [1, 2, 3, 4, 5],
       status: "INTERVIEWED",
+      keyword,
     },
-    { revalidateOnFocus: false }
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+    }
   );
 
   const useCount = (decision: string) => {
@@ -49,6 +71,50 @@ export default function () {
         )}
         {rejectedData && <Count title="Rejected" count={rejectedData.data} />}
       </div>
+      <div className="flex gap-4 py-2 px-8">
+            <Input
+              type="text"
+              placeholder="Search for anything..."
+              className=""
+              defaultValue={keyword}
+              ref={inputRef}
+              onKeyDown={(e) => {
+                if (e.keyCode === 13) {
+                  setKeyword(inputRef.current?.value || "");
+                  reloadCandidateData();
+                }
+              }}
+            />
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Decision" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="NOT_DECIDED">Not Decided</SelectItem>
+                <SelectItem value="PASS">PASS</SelectItem>
+                <SelectItem value="CONSIDERING">Considering</SelectItem>
+                <SelectItem value="FAIL">FAIL</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Department" />
+              </SelectTrigger>
+              <SelectContent>
+                {getAllDepartmentName().map((key: any) => (
+                  <SelectItem key={key} value={Department[key]}>
+                    {key}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={() => {
+                setKeyword(inputRef.current?.value.trim() || "");
+                reloadCandidateData();
+              }}
+            >Search</Button>
+        </div>
       <div className="p-4">
         {candidateData && (
           <div className="mx-4 rounded-xl border border-border">
