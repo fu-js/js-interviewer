@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import Department from "@/lib/types/department";
 import { getAllDepartmentName } from "@/lib/types/department";
 import { isNumberObject } from "util/types";
+import { exportPassCanidate } from "@/lib/export";
 
 export default function () {
   const [keyword, setKeyword] = useState("");
@@ -125,12 +126,13 @@ export default function () {
                 ))}
               </SelectContent>
             </Select>
-            {/* <Button
+            <Button
               onClick={() => {
-                setKeyword(inputRef.current?.value.trim() || "");
-                reloadCandidateData();
+                exportPassCanidate(candidateData?.data?.candidates || []);
               }}
-            >Search</Button> */}
+            >
+              Export
+            </Button>
         </div>
       <div className="p-4">
         {candidateData && (
